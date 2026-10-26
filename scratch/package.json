@@ -1,0 +1,24 @@
+{
+  "name": "instaproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/verify-system.js"
+  },
+  "keywords": ["elevenlabs", "twilio", "n8n", "gemini", "voice-agent", "instagram-shopping", "ecommerce"],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^2.22.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^6.12.0",
+    "twilio": "^6.1.1",
+    "uuid": "^14.0.2"
+  }
+}

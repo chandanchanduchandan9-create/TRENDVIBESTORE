@@ -1,0 +1,1 @@
+        healthcareDetails: product.healthcareDetails || null,

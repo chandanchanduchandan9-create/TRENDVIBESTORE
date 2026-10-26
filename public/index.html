@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendVibe Store - Instagram Video Shopping & AI Voice Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf4ff',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+            },
+            insta: {
+              gradient: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .insta-bg {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+    .reel-card {
+      aspect-ratio: 9/16;
+      max-height: 580px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+
+  <!-- TOP NAVIGATION -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl insta-bg flex items-center justify-center shadow-lg shadow-pink-500/20 text-white font-bold text-xl">
+          <i class="fab fa-instagram"></i>
+        </div>
+        <div>
+          <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300 bg-clip-text text-transparent">TrendVibe Store</span>
+          <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">AI Voice Sales Enabled</span>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-2 sm:gap-3">
+        <a href="/customer.html" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 transition">
+          <i class="fas fa-user-circle text-cyan-400"></i> Customer Portal
+        </a>
+        <a href="/seller.html" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold rounded-lg bg-gradient-to-r from-pink-600 to-rose-600 hover:opacity-95 text-white shadow transition">
+          <i class="fas fa-boxes-stacked"></i> Seller Dashboard
+        </a>
+        <a href="/seller-login.html" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i class="fas fa-arrow-right-to-bracket text-pink-400"></i> Seller Login
+        </a>
+        <a href="/dashboard.html" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i class="fas fa-chart-line text-purple-400"></i> Store CRM
+        </a>
+        <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-white transition">
+          <i class="fab fa-github text-xl"></i>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 text-pink-300 text-xs font-medium mb-4">
+      <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+      Autonomous Instagram Store Enquiry to Voice Sales Conversion
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
+      Explore TrendVibe Store & <span class="bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">Talk to AI</span> Instantly
+    </h1>
+    <div class="flex items-center justify-center gap-3 mt-3 text-xs text-slate-400">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-emerald-400 font-semibold"><i class="fas fa-warehouse"></i> Live Store Inventory Tracking</span>
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-blue-400 font-semibold"><i class="fas fa-truck"></i> Free Shipping Over ₹999</span>
+    </div>
+
+    <!-- CATEGORY FILTER BUTTONS -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mt-6" id="categoryFilters">
+      <button data-cat="all" onclick="filterCategory('all')" class="cat-btn active px-4 py-1.5 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-lg shadow-pink-600/30 transition">All Categories</button>
+      <button data-cat="clothing" onclick="filterCategory('clothing')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Clothing</button>
+      <button data-cat="mobile phones" onclick="filterCategory('mobile phones')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Mobile Phones</button>
+      <button data-cat="laptops" onclick="filterCategory('laptops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Laptops</button>
+      <button data-cat="electronics" onclick="filterCategory('electronics')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Electronics</button>
+      <button data-cat="shoes" onclick="filterCategory('shoes')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Shoes</button>
+      <button data-cat="cosmetics" onclick="filterCategory('cosmetics')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Cosmetics</button>
+      <button data-cat="accessories" onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Accessories</button>
+      <button data-cat="Medicines & Healthcare Products" onclick="filterCategory('Medicines & Healthcare Products')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition"><i class="fas fa-prescription-bottle-medical mr-1 text-pink-400"></i> Medicines & Healthcare Products</button>
+      <button data-cat="Food" onclick="filterCategory('Food')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition"><i class="fas fa-utensils mr-1 text-amber-400"></i> Food</button>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM POSTS / REELS GRID -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Loaded dynamically via loadProducts() -->
+    </div>
+  </main>
+
+  <script>
+    let allProducts = [];
+    let currentCategory = 'all';
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        allProducts = data.products || [];
+        renderProducts();
+      } catch (err) {
+        console.error('Failed to load products:', err);
+        document.getElementById('productsGrid').innerHTML = '<div class="col-span-full text-center text-red-400">Failed to load products. Please check server.</div>';
+      }
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('bg-pink-600', 'text-white', 'shadow-lg', 'shadow-pink-600/30');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+        const btnCat = btn.getAttribute('data-cat');
+        if (btnCat && btnCat.toLowerCase() === cat.toLowerCase()) {
+          btn.classList.add('bg-pink-600', 'text-white', 'shadow-lg', 'shadow-pink-600/30');
+          btn.classList.remove('bg-slate-800', 'text-slate-300');
+        }
+      });
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+
+      const filtered = currentCategory === 'all' 
+        ? allProducts 
+        : allProducts.filter(p => (p.category || '').toLowerCase() === currentCategory.toLowerCase());
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center text-slate-400 py-12">No products found in this category.</div>';
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-slate-700 transition shadow-lg group';
+
+        const stockBadge = p.inStock
+          ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">In Stock (${p.stockCount} units)</span>`
+          : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">Sold Out</span>`;
+
+        const fallbackImg = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';
+        const productImg = p.imageUrl || p.image || fallbackImg;
+        const igPostUrl = p.instagramVideoPostUrl || `https://www.instagram.com/reel/post_${p.id}/`;
+
+        card.innerHTML = `
+          <div>
+            <div class="relative overflow-hidden bg-slate-950 aspect-square">
+              <img src="${productImg}" alt="${p.name}" onerror="this.onerror=null;this.src='${fallbackImg}'" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <div class="absolute top-3 right-3">
+                ${stockBadge}
+              </div>
+              <a href="${igPostUrl}" target="_blank" rel="noopener noreferrer" title="View Instagram Post / Reel" 
+                 class="absolute top-3 left-3 bg-slate-950/85 hover:bg-gradient-to-r hover:from-pink-600 hover:to-purple-600 text-pink-400 hover:text-white px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide transition flex items-center gap-1.5 border border-slate-800 shadow-md backdrop-blur z-10">
+                <i class="fab fa-instagram text-pink-400 group-hover:text-white"></i> Post
+              </a>
+              <div class="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-pink-400 border border-slate-800">
+                ${p.category || 'Lifestyle'}
+              </div>
+            </div>
+
+            <div class="p-4 space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span class="font-semibold text-slate-300">${p.brand || 'TrendVibe'}</span>
+                <span class="text-amber-400 font-bold">${p.rating ? '★ ' + p.rating : '★ 4.8'}</span>
+              </div>
+              <h3 class="font-bold text-sm text-white line-clamp-1 group-hover:text-pink-400 transition">${p.name}</h3>
+              <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${p.description || ''}</p>
+              
+              <div class="pt-2 flex items-center justify-between">
+                <div class="flex items-baseline gap-2">
+                  <span class="text-lg font-black text-white">${p.priceFormatted || '₹' + p.price}</span>
+                  ${p.originalPrice ? `<span class="text-xs line-through text-slate-500">${p.originalPriceFormatted || '₹' + p.originalPrice}</span>` : ''}
+                </div>
+                ${p.quickDeliveryAvailable ? `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full"><i class="fas fa-bolt text-amber-400"></i> 20-min Delivery</span>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 pt-0 flex gap-2">
+            <a href="/enquire.html?productId=${p.id}&autoCall=true" 
+               class="flex-1 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 hover:opacity-95 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-pink-600/20">
+              <i class="fas fa-headset"></i> Talk to AI
+            </a>
+            <button onclick="shareEnquiryLink('${p.id}', '${(p.name || '').replace(/'/g, "\\'")}')" title="Share Enquiry Link"
+               class="px-2.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition cursor-pointer">
+              <i class="fas fa-share-nodes text-pink-400"></i>
+              <span class="hidden sm:inline text-[11px]">Share</span>
+            </button>
+            <a href="${igPostUrl}" target="_blank" rel="noopener noreferrer" title="View Instagram Post / Reel" 
+               class="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-pink-400 hover:text-pink-300 border border-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition" aria-label="Open Instagram Post">
+              <i class="fab fa-instagram text-sm"></i>
+              <span class="hidden sm:inline">Post</span>
+            </a>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    async function shareEnquiryLink(productId, productName) {
+      const url = `${window.location.origin}/enquire.html?productId=${encodeURIComponent(productId)}`;
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: `TrendVibe - ${productName}`,
+            text: `Enquire about ${productName} and get an instant AI voice call:`,
+            url
+          });
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(url);
+          alert(`Link copied to clipboard!\n\n${url}`);
+        } else {
+          prompt('Copy Enquiry Link:', url);
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          prompt('Copy Enquiry Link:', url);
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-slate-500 text-xs text-center space-y-2">
+    <div class="flex flex-wrap items-center justify-center gap-4 text-slate-400">
+      <a href="/customer.html" class="hover:text-cyan-400 transition flex items-center gap-1"><i class="fas fa-user-circle text-cyan-400"></i> Customer Portal & Orders</a>
+      <span>•</span>
+      <a href="/seller.html" class="hover:text-pink-400 transition flex items-center gap-1"><i class="fas fa-boxes-stacked text-pink-400"></i> Seller Central</a>
+      <span>•</span>
+      <a href="/dashboard.html" class="hover:text-purple-400 transition flex items-center gap-1"><i class="fas fa-chart-line text-purple-400"></i> Voice CRM</a>
+    </div>
+    <p>© 2026 TrendVibe Store. Powered by Zyro AI Voice Shopping Agent.</p>
+  </footer>
+
+</body>
+</html>

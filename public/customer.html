@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Account, Order Tracking & Enquiries - TrendVibe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .insta-gradient {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col justify-between">
+
+  <!-- TOP HEADER -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3">
+        <a href="/index.html" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-pink-500/20">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base sm:text-lg font-extrabold tracking-tight text-white">TrendVibe Customer Hub</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Track Shipments • Manage Orders • Order Enquiries</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="/index.html" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fas fa-store text-cyan-400"></i> Storefront
+        </a>
+        <a href="/seller.html" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fas fa-boxes-stacked text-pink-400"></i> Seller Portal
+        </a>
+        <button id="navLogoutBtn" onclick="handleCustomerLogout()" class="hidden px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition flex items-center gap-1">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-5xl mx-auto w-full px-4 sm:px-6 py-6 flex-1">
+
+    <!-- ============================================================== -->
+    <!-- VIEW 1: CUSTOMER LOGIN FORM (IF NOT LOGGED IN) -->
+    <!-- ============================================================== -->
+    <div id="loginSection" class="max-w-md mx-auto my-8 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-pink-500 to-amber-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-pink-500/30">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h2 class="text-xl font-extrabold text-white">Customer Login</h2>
+        <p class="text-xs text-slate-400">
+          Enter your 10-digit Mobile Number or Gmail address to track your orders and ask questions.
+        </p>
+      </div>
+
+      <form id="customerLoginForm" onsubmit="handleCustomerLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mobile Number or Gmail ID <span class="text-pink-500">*</span></label>
+          <div class="relative">
+            <i class="fas fa-id-badge absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+            <input type="text" id="loginIdentifier" required placeholder="e.g. 9876543210 or rahul@gmail.com"
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+          </div>
+          <span class="text-[10px] text-slate-500 mt-1 block">Quick Login: Enter the mobile number or email used during order</span>
+        </div>
+
+        <button type="submit" id="loginBtn" class="w-full insta-gradient hover:opacity-95 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+          <i class="fas fa-arrow-right-to-bracket"></i> Continue to My Orders
+        </button>
+      </form>
+
+      <!-- DEMO TEST ACCOUNTS -->
+      <div class="pt-4 border-t border-slate-800/80">
+        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500 block mb-2 text-center">Quick Demo Logins</span>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <button type="button" onclick="quickFillLogin('9876543210')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl p-2 text-left">
+            <span class="font-bold text-pink-400 block text-[11px]">📱 Mobile Demo</span>
+            <span class="text-[10px] text-slate-400 font-mono">9876543210</span>
+          </button>
+          <button type="button" onclick="quickFillLogin('rahul@gmail.com')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl p-2 text-left">
+            <span class="font-bold text-amber-400 block text-[11px]">📧 Gmail Demo</span>
+            <span class="text-[10px] text-slate-400 font-mono">rahul@gmail.com</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-center pt-2">
+        <a href="/index.html" class="text-xs text-slate-400 hover:text-slate-200">
+          <i class="fas fa-chevron-left"></i> Back to Storefront
+        </a>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 2: LOGGED-IN CUSTOMER DASHBOARD (ORDERS & ENQUIRIES) -->
+    <!-- ============================================================== -->
+    <div id="dashboardSection" class="hidden space-y-6">
+
+      <!-- CUSTOMER PROFILE CARD -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-amber-500 flex items-center justify-center text-white text-xl shadow-lg">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-black text-white" id="custProfileName">Rahul Sharma</h2>
+              <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fas fa-circle-check"></i> Verified Customer
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5 flex flex-wrap items-center gap-2">
+              <span><i class="fas fa-phone text-slate-500"></i> <strong id="custProfilePhone" class="text-slate-300 font-mono">+91 9876543210</strong></span>
+              <span>•</span>
+              <span><i class="fas fa-envelope text-slate-500"></i> <strong id="custProfileEmail" class="text-slate-300">rahul@gmail.com</strong></span>
+            </p>
+          </div>
+        </div>
+
+        <!-- SAVED DELIVERY ADDRESS MINI BADGE -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs max-w-sm">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-pink-400 block mb-1 flex items-center gap-1">
+            <i class="fas fa-location-dot"></i> Default Delivery Address
+          </span>
+          <p id="custSavedAddressText" class="text-slate-300 text-[11px] line-clamp-2">
+            100 Feet Road, Indiranagar, Bengaluru, Karnataka - 560038
+          </p>
+        </div>
+      </div>
+
+      <!-- TABS SWITCHER -->
+      <div class="flex items-center gap-2 border-b border-slate-800 pb-2 text-xs sm:text-sm font-semibold">
+        <button onclick="switchCustomerTab('orders')" id="tabBtnCustOrders" class="px-4 py-2 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30 flex items-center gap-2 transition">
+          <i class="fas fa-bag-shopping"></i> My Orders & Live Tracking
+          <span id="ordersCountBadge" class="bg-pink-500 text-white text-[10px] px-2 py-0.2 rounded-full">0</span>
+        </button>
+        <button onclick="switchCustomerTab('enquiries')" id="tabBtnCustEnquiries" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white border border-transparent hover:bg-slate-900 flex items-center gap-2 transition">
+          <i class="fas fa-comments"></i> My Order Enquiries
+          <span id="enquiriesCountBadge" class="bg-slate-800 text-slate-300 text-[10px] px-2 py-0.2 rounded-full">0</span>
+        </button>
+      </div>
+
+      <!-- ========================================================== -->
+      <!-- TAB CONTENT A: MY ORDERS & REAL-TIME TRACKING -->
+      <!-- ========================================================== -->
+      <div id="tabContentOrders" class="space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fas fa-truck-fast text-cyan-400"></i> Track Your Shipments
+          </h3>
+          <button onclick="refreshCustomerOrders()" class="text-xs text-pink-400 hover:text-pink-300 font-semibold flex items-center gap-1">
+            <i class="fas fa-rotate" id="orderRefreshIcon"></i> Refresh Orders
+          </button>
+        </div>
+
+        <!-- ORDERS CONTAINER (DYNAMIC) -->
+        <div id="customerOrdersList" class="space-y-4">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- EMPTY STATE (IF NO ORDERS) -->
+        <div id="noOrdersState" class="hidden text-center py-12 bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
+          <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-2xl">
+            <i class="fas fa-box-open"></i>
+          </div>
+          <h4 class="font-bold text-white text-base">No Orders Found</h4>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto">
+            You haven't placed any orders with this phone or email yet. Browse our verified store catalog and talk to Zyro AI to order!
+          </p>
+          <a href="/index.html" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-pink-600 to-amber-500 text-white text-xs font-bold rounded-xl shadow mt-2">
+            <i class="fas fa-bag-shopping"></i> Start Shopping Now
+          </a>
+        </div>
+
+      </div>
+
+      <!-- ========================================================== -->
+      <!-- TAB CONTENT B: MY ORDER ENQUIRIES -->
+      <!-- ========================================================== -->
+      <div id="tabContentEnquiries" class="hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fas fa-comments text-pink-400"></i> Order Enquiries & Support Tickets
+            </h3>
+            <p class="text-xs text-slate-400">Questions submitted regarding your orders and delivery</p>
+          </div>
+        </div>
+
+        <!-- ENQUIRIES TABLE / LIST -->
+        <div id="customerEnquiriesList" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div id="noEnquiriesState" class="hidden text-center py-10 bg-slate-900 border border-slate-800 rounded-3xl space-y-2">
+          <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-xl">
+            <i class="fas fa-comment-dots"></i>
+          </div>
+          <h4 class="font-bold text-white text-sm">No Active Enquiries</h4>
+          <p class="text-xs text-slate-400">Have a question about your order? Click "Enquire About Order" on any order card above.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: ENQUIRE ABOUT ORDER MODAL -->
+  <!-- ============================================================== -->
+  <div id="orderEnquiryModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 my-auto">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-lg shadow-lg">
+            <i class="fas fa-headset"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-white">Enquire About Order</h3>
+            <p class="text-[11px] text-slate-400" id="modalEnqOrderSub">Order ID: ORD-XXX</p>
+          </div>
+        </div>
+        <button onclick="closeOrderEnquiryModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="orderEnquiryForm" onsubmit="handleOrderEnquirySubmit(event)" class="space-y-3">
+        <input type="hidden" id="modalEnqOrderId" value="">
+
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Enquiry Category <span class="text-pink-500">*</span></label>
+          <select id="modalEnqType" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            <option value="Delivery Status & ETA">🚚 Where is my delivery right now?</option>
+            <option value="Change Delivery Address/Time">📍 Change delivery address or preferred time</option>
+            <option value="Invoice & Payment Receipt">🧾 Request official invoice & GST bill</option>
+            <option value="Return or Replacement Request">🔄 Request 7-day return or size exchange</option>
+            <option value="General Order Question">❓ Other question for store seller</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Your Question / Message <span class="text-pink-500">*</span></label>
+          <textarea id="modalEnqMessage" rows="3" required placeholder="Please provide details (e.g. Please deliver after 5 PM, or check why tracking is delayed)..."
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"></textarea>
+        </div>
+
+        <!-- QUICK CHIPS -->
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="setModalEnqMsg('When will my order reach my doorstep?')" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">🚚 Check exact ETA</button>
+          <button type="button" onclick="setModalEnqMsg('Please deliver to security desk if I am unavailable.')" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">🏢 Leave with Security</button>
+          <button type="button" onclick="setModalEnqMsg('I want to exchange for a different size.')" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700">👕 Size Exchange</button>
+        </div>
+
+        <button type="submit" id="submitOrderEnquiryBtn" class="w-full mt-2 bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 hover:opacity-95 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+          <i class="fas fa-paper-plane"></i> Submit Order Enquiry to Seller
+        </button>
+      </form>
+
+      <div id="enqModalSuccess" class="hidden text-center py-4 space-y-2">
+        <div class="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl animate-bounce">
+          <i class="fas fa-check"></i>
+        </div>
+        <h4 class="font-bold text-white text-sm">Enquiry Submitted Successfully!</h4>
+        <p class="text-xs text-slate-400">
+          Your enquiry has been logged into Seller Central and attached to your order timeline. Zyro AI and our store logistics team will review it.
+        </p>
+        <button onclick="closeOrderEnquiryModal()" class="mt-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© 2026 TrendVibe Store • Official Indian E-Commerce Portal</p>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="/index.html" class="hover:text-pink-400 transition">Storefront</a>
+        <a href="/seller.html" class="hover:text-pink-400 transition">Seller Central</a>
+        <a href="/dashboard.html" class="hover:text-pink-400 transition">Store CRM</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let activeCustomer = null;
+    let customerOrders = [];
+    let customerEnquiries = [];
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check query params
+      const params = new URLSearchParams(window.location.search);
+      const paramMobile = params.get('mobile');
+      const paramEmail = params.get('email');
+      const paramOrderId = params.get('orderId');
+
+      const savedSession = localStorage.getItem('trendvibe_customer');
+      if (savedSession) {
+        try {
+          activeCustomer = JSON.parse(savedSession);
+        } catch(e) {}
+      }
+
+      if (paramMobile || paramEmail) {
+        performLogin(paramMobile || paramEmail, paramOrderId);
+      } else if (activeCustomer && (activeCustomer.mobile || activeCustomer.email)) {
+        performLogin(activeCustomer.mobile || activeCustomer.email, paramOrderId);
+      } else {
+        showLoginView();
+      }
+    });
+
+    function quickFillLogin(val) {
+      document.getElementById('loginIdentifier').value = val;
+      performLogin(val);
+    }
+
+    function handleCustomerLoginSubmit(e) {
+      e.preventDefault();
+      const val = document.getElementById('loginIdentifier').value.trim();
+      if (!val) return;
+      performLogin(val);
+    }
+
+    async function performLogin(identifier, focusOrderId = null) {
+      const btn = document.getElementById('loginBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging In...';
+      }
+
+      try {
+        const res = await fetch('/api/customer/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier })
+        });
+        const data = await res.json();
+        
+        if (data.success && data.customer) {
+          activeCustomer = data.customer;
+          customerOrders = data.orders || [];
+          localStorage.setItem('trendvibe_customer', JSON.stringify(activeCustomer));
+          
+          showDashboardView();
+          renderCustomerProfile();
+          renderCustomerOrders(focusOrderId);
+          loadCustomerEnquiries();
+        } else {
+          alert(data.error || 'Could not log in. Please check your phone or email.');
+          showLoginView();
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showLoginView();
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Continue to My Orders';
+        }
+      }
+    }
+
+    function showLoginView() {
+      document.getElementById('loginSection').classList.remove('hidden');
+      document.getElementById('dashboardSection').classList.add('hidden');
+      document.getElementById('navLogoutBtn').classList.add('hidden');
+    }
+
+    function showDashboardView() {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+      document.getElementById('navLogoutBtn').classList.remove('hidden');
+    }
+
+    function handleCustomerLogout() {
+      localStorage.removeItem('trendvibe_customer');
+      activeCustomer = null;
+      customerOrders = [];
+      customerEnquiries = [];
+      showLoginView();
+    }
+
+    function renderCustomerProfile() {
+      if (!activeCustomer) return;
+      document.getElementById('custProfileName').innerText = activeCustomer.fullName || activeCustomer.name || 'Valued Customer';
+      document.getElementById('custProfilePhone').innerText = activeCustomer.mobile ? `+91 ${activeCustomer.mobile}` : 'Mobile not linked';
+      document.getElementById('custProfileEmail').innerText = activeCustomer.email || 'Email not linked';
+
+      const addr = activeCustomer.address;
+      if (addr && (addr.houseNo || addr.area || addr.city)) {
+        document.getElementById('custSavedAddressText').innerText = 
+          `${addr.houseNo ? addr.houseNo + ', ' : ''}${addr.area ? addr.area + ', ' : ''}${addr.city ? addr.city + ', ' : ''}${addr.state ? addr.state : ''} - ${addr.pincode || ''} (${addr.addressType || 'Home'})`;
+      } else {
+        document.getElementById('custSavedAddressText').innerText = 'No default address saved yet';
+      }
+    }
+
+    async function refreshCustomerOrders() {
+      const icon = document.getElementById('orderRefreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+      if (activeCustomer) {
+        await performLogin(activeCustomer.mobile || activeCustomer.email);
+      }
+      if (icon) icon.classList.remove('fa-spin');
+    }
+
+    function renderCustomerOrders(focusOrderId = null) {
+      const container = document.getElementById('customerOrdersList');
+      const emptyState = document.getElementById('noOrdersState');
+      const countBadge = document.getElementById('ordersCountBadge');
+
+      if (!container) return;
+      container.innerHTML = '';
+      countBadge.innerText = customerOrders.length;
+
+      if (customerOrders.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      customerOrders.forEach(order => {
+        const currentStageIndex = getStageIndex(order.orderStatus);
+        const card = document.createElement('div');
+        card.id = `order-card-${order.id}`;
+        card.className = `bg-slate-900 border ${focusOrderId === order.id ? 'border-pink-500 ring-2 ring-pink-500/30' : 'border-slate-800'} rounded-3xl p-5 sm:p-6 shadow-xl space-y-5 transition`;
+
+        card.innerHTML = `
+          <!-- CARD TOP: ORDER ID, DATE, STATUS BADGE -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-bold text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-lg border border-pink-500/20">
+                  ${order.id}
+                </span>
+                <span class="text-xs text-slate-400">
+                  Ordered on ${new Date(order.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+              <h4 class="font-extrabold text-white text-base mt-1.5">${order.productName}</h4>
+              <p class="text-xs text-slate-400">
+                Quantity: <strong class="text-slate-200">${order.quantity}</strong> 
+                ${order.size ? `• Size: <strong class="text-slate-200">${order.size}</strong>` : ''} 
+                ${order.colour ? `• Colour: <strong class="text-slate-200">${order.colour}</strong>` : ''}
+              </p>
+            </div>
+
+            <div class="text-left sm:text-right flex sm:flex-col items-center sm:items-end justify-between gap-1">
+              <div>
+                <span class="text-lg font-black text-emerald-400">₹${Math.round(order.totalAmount || 0).toLocaleString('en-IN')}</span>
+                <span class="text-[10px] text-slate-400 block font-medium">${order.paymentMethod || 'Cash on Delivery (COD)'}</span>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${getStatusBadgeClass(order.orderStatus)}">
+                <i class="fas fa-circle text-[7px]"></i> ${order.orderStatus}
+              </span>
+            </div>
+          </div>
+
+          <!-- VISUAL 5-STEP ORDER TRACKING STEPPER (FLIPKART / MEESHO STYLE) -->
+          <div class="py-2">
+            <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 mb-2">
+              <span class="flex items-center gap-1.5 text-white">
+                <i class="fas fa-truck text-pink-400"></i> Delivery Partner: 
+                <strong class="text-cyan-400">${order.courier || 'BlueDart Express'}</strong>
+              </span>
+              <span class="font-mono text-slate-400">AWB: <strong class="text-white">${order.trackingNumber || 'BD-123456-IN'}</strong></span>
+            </div>
+
+            <!-- STEPPER PROGRESS BAR -->
+            <div class="grid grid-cols-5 gap-1 pt-2">
+              ${renderStepperStep(1, 'Confirmed', currentStageIndex >= 0, currentStageIndex === 0)}
+              ${renderStepperStep(2, 'Warehouse', currentStageIndex >= 1, currentStageIndex === 1)}
+              ${renderStepperStep(3, 'Dispatched', currentStageIndex >= 2, currentStageIndex === 2)}
+              ${renderStepperStep(4, 'In Transit', currentStageIndex >= 3, currentStageIndex === 3)}
+              ${renderStepperStep(5, 'Delivered', currentStageIndex >= 4, currentStageIndex === 4)}
+            </div>
+
+            <p class="text-[11px] text-slate-400 mt-3 flex items-center gap-1.5">
+              <i class="fas fa-clock text-amber-400"></i> Expected Delivery: 
+              <strong class="text-slate-200 font-semibold">${order.estimatedDelivery || '2-3 Business Days'}</strong>
+            </p>
+          </div>
+
+          <!-- SHIPPING ADDRESS & ACTIONS -->
+          <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="text-slate-400 max-w-md truncate">
+              <i class="fas fa-location-dot text-slate-500 mr-1"></i>
+              <span>Deliver to: <strong class="text-slate-200">${order.customerName || 'Customer'}</strong> - ${order.shippingAddress || 'Address on file'}</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openOrderEnquiryModal('${order.id}', '${order.productName}')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-95 text-white font-bold transition flex items-center gap-1.5 shadow">
+                <i class="fas fa-comments"></i> Enquire About Order
+              </button>
+              <button onclick="toggleOrderMilestones('${order.id}')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition border border-slate-700 flex items-center gap-1">
+                <i class="fas fa-list-timeline"></i> Timeline
+              </button>
+            </div>
+          </div>
+
+          <!-- COLLAPSIBLE MILESTONE TIMELINE -->
+          <div id="milestones-${order.id}" class="hidden pt-3 border-t border-slate-800/80 space-y-2 text-xs">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500 block">Milestone Tracking History</span>
+            <div class="space-y-2 bg-slate-950 p-3 rounded-2xl border border-slate-800/80">
+              ${(order.timeline || []).map(m => `
+                <div class="flex items-start gap-2.5 pb-2 border-b border-slate-900 last:border-0 last:pb-0">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1 shrink-0"></span>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-slate-200">${m.status}</span>
+                      <span class="text-[10px] text-slate-500 font-mono">${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • ${new Date(m.timestamp).toLocaleDateString()}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">${m.location} - <span class="text-slate-300">${m.note}</span></p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderStepperStep(stepNum, label, isCompleted, isCurrent) {
+      const bg = isCurrent ? 'bg-pink-600 text-white shadow-lg shadow-pink-500/30 ring-2 ring-pink-400' : (isCompleted ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-500');
+      const textCol = isCurrent ? 'text-pink-400 font-bold' : (isCompleted ? 'text-emerald-400 font-medium' : 'text-slate-500');
+      return `
+        <div class="text-center">
+          <div class="w-7 h-7 mx-auto rounded-full ${bg} flex items-center justify-center text-xs font-bold transition">
+            ${isCompleted && !isCurrent ? '<i class="fas fa-check text-[10px]"></i>' : stepNum}
+          </div>
+          <span class="text-[10px] ${textCol} block mt-1 truncate">${label}</span>
+        </div>
+      `;
+    }
+
+    function getStageIndex(status) {
+      const s = (status || '').toLowerCase();
+      if (s.includes('deliver')) return 4;
+      if (s.includes('transit')) return 3;
+      if (s.includes('dispatch')) return 2;
+      if (s.includes('process') || s.includes('warehouse')) return 1;
+      return 0; // Confirmed
+    }
+
+    function getStatusBadgeClass(status) {
+      const s = (status || '').toLowerCase();
+      if (s.includes('deliver')) return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      if (s.includes('transit')) return 'bg-pink-500/20 text-pink-400 border border-pink-500/30';
+      if (s.includes('dispatch')) return 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+      if (s.includes('process')) return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
+      return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+    }
+
+    function toggleOrderMilestones(orderId) {
+      const el = document.getElementById(`milestones-${orderId}`);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function switchCustomerTab(tab) {
+      const btnOrders = document.getElementById('tabBtnCustOrders');
+      const btnEnq = document.getElementById('tabBtnCustEnquiries');
+      const secOrders = document.getElementById('tabContentOrders');
+      const secEnq = document.getElementById('tabContentEnquiries');
+
+      if (tab === 'orders') {
+        btnOrders.className = 'px-4 py-2 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30 flex items-center gap-2 transition';
+        btnEnq.className = 'px-4 py-2 rounded-xl text-slate-400 hover:text-white border border-transparent hover:bg-slate-900 flex items-center gap-2 transition';
+        secOrders.classList.remove('hidden');
+        secEnq.classList.add('hidden');
+      } else {
+        btnEnq.className = 'px-4 py-2 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30 flex items-center gap-2 transition';
+        btnOrders.className = 'px-4 py-2 rounded-xl text-slate-400 hover:text-white border border-transparent hover:bg-slate-900 flex items-center gap-2 transition';
+        secEnq.classList.remove('hidden');
+        secOrders.classList.add('hidden');
+        loadCustomerEnquiries();
+      }
+    }
+
+    // --- ORDER ENQUIRY MODAL LOGIC ---
+    function openOrderEnquiryModal(orderId, productName) {
+      document.getElementById('modalEnqOrderId').value = orderId;
+      document.getElementById('modalEnqOrderSub').innerText = `Order ID: ${orderId} • ${productName}`;
+      document.getElementById('orderEnquiryForm').classList.remove('hidden');
+      document.getElementById('enqModalSuccess').classList.add('hidden');
+      document.getElementById('orderEnquiryModal').classList.remove('hidden');
+    }
+
+    function closeOrderEnquiryModal() {
+      document.getElementById('orderEnquiryModal').classList.add('hidden');
+    }
+
+    function setModalEnqMsg(text) {
+      document.getElementById('modalEnqMessage').value = text;
+    }
+
+    async function handleOrderEnquirySubmit(e) {
+      e.preventDefault();
+      const orderId = document.getElementById('modalEnqOrderId').value;
+      const enquiryType = document.getElementById('modalEnqType').value;
+      const message = document.getElementById('modalEnqMessage').value.trim();
+      const btn = document.getElementById('submitOrderEnquiryBtn');
+
+      if (!message) return;
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting to Seller...';
+      }
+
+      try {
+        const res = await fetch('/api/customer/order-enquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId,
+            customerName: activeCustomer ? activeCustomer.fullName : 'Customer',
+            mobile: activeCustomer ? activeCustomer.mobile : '',
+            email: activeCustomer ? activeCustomer.email : '',
+            enquiryType,
+            message
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('orderEnquiryForm').classList.add('hidden');
+          document.getElementById('enqModalSuccess').classList.remove('hidden');
+          loadCustomerEnquiries();
+          refreshCustomerOrders();
+        } else {
+          alert('Could not submit enquiry: ' + (data.error || 'Server error'));
+        }
+      } catch (err) {
+        alert('Network error submitting enquiry.');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Order Enquiry to Seller';
+        }
+      }
+    }
+
+    async function loadCustomerEnquiries() {
+      try {
+        const res = await fetch('/api/customer/order-enquiries');
+        const data = await res.json();
+        if (data.success) {
+          // Filter enquiries belonging to this customer
+          const phone = activeCustomer ? activeCustomer.mobile : '';
+          const email = activeCustomer ? (activeCustomer.email || '').toLowerCase() : '';
+          
+          customerEnquiries = data.enquiries.filter(e => {
+            const ePhone = (e.mobile || '').replace(/\D/g, '').slice(-10);
+            const eEmail = (e.email || '').toLowerCase();
+            if (phone && ePhone === phone) return true;
+            if (email && eEmail === email) return true;
+            if (customerOrders.some(o => o.id === e.orderId)) return true;
+            return false;
+          });
+
+          renderCustomerEnquiries();
+        }
+      } catch(e) {}
+    }
+
+    function renderCustomerEnquiries() {
+      const list = document.getElementById('customerEnquiriesList');
+      const empty = document.getElementById('noEnquiriesState');
+      const badge = document.getElementById('enquiriesCountBadge');
+      if (!list) return;
+
+      list.innerHTML = '';
+      badge.innerText = customerEnquiries.length;
+
+      if (customerEnquiries.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      customerEnquiries.forEach(enq => {
+        const div = document.createElement('div');
+        div.className = 'bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow space-y-2';
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-xs font-bold text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">${enq.orderId}</span>
+            <span class="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-full">${enq.status}</span>
+          </div>
+          <h4 class="font-bold text-white text-xs">${enq.enquiryType} - <span class="text-slate-400 font-normal">${enq.productName}</span></h4>
+          <p class="text-xs text-slate-300 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">"${enq.message}"</p>
+          <div class="text-[10px] text-slate-500 flex items-center justify-between pt-1">
+            <span>Submitted on ${new Date(enq.createdAt).toLocaleDateString()} at ${new Date(enq.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <span class="text-emerald-400 font-semibold"><i class="fas fa-shield-check"></i> Monitored by Zyro AI & Logistics</span>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

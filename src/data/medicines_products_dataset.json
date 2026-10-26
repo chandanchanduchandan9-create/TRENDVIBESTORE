@@ -1,0 +1,939 @@
+{
+  "dataset_name": "Medicines & Healthcare Product Q&A Dataset",
+  "version": "1.0",
+  "created_for": "AI Sales Agent Product Q&A",
+  "language_support": [
+    "English",
+    "Kannada",
+    "Roman Kannada",
+    "Mixed Kannada-English"
+  ],
+  "data_policy": {
+    "verified_fields": "Medical/product facts should be verified against authoritative or manufacturer/package information.",
+    "mock_fields": "Fields explicitly marked Mock are realistic demonstration store data and must be replaced by actual inventory values.",
+    "no_invention": "Never invent dosage, batch number, expiry, licence/registration number, prescription status, drug interactions, pregnancy advice, or medical claims.",
+    "personalized_medical_advice": "For diagnosis, personalized dosing, drug-interaction decisions involving unknown medicines, pregnancy-specific decisions, or urgent symptoms, refer the customer to a qualified doctor/pharmacist."
+  },
+  "products": [
+    {
+      "id": "MED-PARA-001",
+      "alternateId": "PROD-MED-002",
+      "product_name": "Paracetamol 500 mg Tablet",
+      "brand": "Generic / Store Medicine",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Fever & Pain Relief",
+      "product_type": "Medicine",
+      "dosage_form": "Tablet",
+      "route": "Oral",
+      "active_ingredients": [
+        {
+          "name": "Paracetamol",
+          "strength": "500 mg"
+        }
+      ],
+      "purpose": "Relief of mild to moderate pain and reduction of fever",
+      "common_uses": [
+        "Headache",
+        "Toothache",
+        "Muscle aches",
+        "Sore throat",
+        "Fever"
+      ],
+      "how_to_use": "Use exactly according to the product label or healthcare professional's directions.",
+      "food_requirement": "Follow the specific product label or healthcare professional's instructions.",
+      "warnings": [
+        "Do not combine multiple products containing paracetamol without checking labels.",
+        "Excessive paracetamol can cause serious liver damage."
+      ],
+      "side_effects": [
+        "Adverse reactions can occur; follow the product label."
+      ],
+      "contraindications": [
+        "Known allergy to paracetamol or formulation ingredients."
+      ],
+      "precautions": [
+        "Use extra caution and seek professional advice if liver disease is present."
+      ],
+      "drug_interactions": "Check with a pharmacist/doctor when using other medicines.",
+      "allergy_info": "Check active and inactive ingredients before use.",
+      "pregnancy": "Consult a doctor/pharmacist for product-specific advice.",
+      "breastfeeding": "Consult a healthcare professional if unsure.",
+      "children": "Use age-appropriate formulation and follow professional/product-label advice.",
+      "elderly": "Follow product label and seek professional advice when appropriate.",
+      "prescription_status": "Verify the legal classification of the exact stocked product.",
+      "manufacturer": "Verify from actual package/batch record.",
+      "pack_size": "Mock: 10 tablets",
+      "sku": "MOCK-MED-PARA-500-10",
+      "mrp_inr": 15,
+      "selling_price_inr": 12,
+      "discount_percent": 20,
+      "stock_quantity": 85,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "PAR500-B2607A",
+      "manufacturing_date": "2026-07",
+      "expiry_date": "2028-06",
+      "source": "1mg / medical reference; verify against actual package",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-ORS-001",
+      "alternateId": "PROD-MED-003",
+      "product_name": "ORS Powder",
+      "brand": "Electral (example product)",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Oral Rehydration",
+      "product_type": "Healthcare Product",
+      "dosage_form": "Powder",
+      "route": "Oral",
+      "purpose": "Replenishment of fluids and electrolytes",
+      "common_uses": [
+        "Fluid loss associated with diarrhoea",
+        "Vomiting-related fluid loss",
+        "Sweating-related fluid loss",
+        "Dehydration"
+      ],
+      "active_ingredients": [
+        {
+          "name": "Sodium chloride",
+          "example_strength": "2.60 g per 21.8 g sachet"
+        },
+        {
+          "name": "Potassium chloride",
+          "example_strength": "1.50 g per 21.8 g sachet"
+        },
+        {
+          "name": "Sodium citrate",
+          "example_strength": "2.90 g per 21.8 g sachet"
+        },
+        {
+          "name": "Dextrose anhydrous",
+          "example_strength": "13.50 g per 21.8 g sachet"
+        }
+      ],
+      "how_to_use": "Follow the exact water volume printed on the particular sachet.",
+      "preparation_examples": [
+        "21.8 g sachet: example 1 sachet in 1 litre drinking water",
+        "4.4 g sachet: example 1 sachet in 200 ml water"
+      ],
+      "warnings": [
+        "Do not use a different dilution than specified on the packet.",
+        "Severe dehydration may require urgent medical treatment."
+      ],
+      "precautions": [
+        "People with kidney problems should seek professional advice."
+      ],
+      "allergy_info": "Check flavouring and excipients on the package.",
+      "pregnancy": "Consult healthcare professional if needed.",
+      "breastfeeding": "Consult healthcare professional if needed.",
+      "manufacturer": "Depends on exact brand; verify package.",
+      "prescription_status": "Generally sold as an OTC healthcare product; verify the exact product.",
+      "pack_size": "Mock: 21.8 g × 1 sachet",
+      "sku": "MOCK-ORS-ELECTRAL-21G",
+      "mrp_inr": 22,
+      "selling_price_inr": 19,
+      "discount_percent": 14,
+      "stock_quantity": 120,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "ORS2608E21",
+      "manufacturing_date": "2026-08",
+      "expiry_date": "2028-07",
+      "source": "WHO / current Indian product listing; verify actual package",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-ANT-001",
+      "alternateId": "PROD-MED-006",
+      "product_name": "Calcium Carbonate Antacid",
+      "brand": "Generic / Store Medicine",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Acidity & Heartburn",
+      "product_type": "Medicine",
+      "dosage_form": "Chewable Tablet",
+      "route": "Oral",
+      "active_ingredients": [
+        {
+          "name": "Calcium Carbonate",
+          "strength": "Product-specific (e.g. 500 mg)"
+        }
+      ],
+      "purpose": "Relief of occasional heartburn, acid indigestion and upset stomach",
+      "common_uses": [
+        "Heartburn",
+        "Acid indigestion",
+        "Sour stomach",
+        "Upset stomach"
+      ],
+      "how_to_use": "Chew thoroughly if it is a chewable formulation and follow package directions.",
+      "food_requirement": "Can be taken as needed according to package directions.",
+      "warnings": [
+        "Do not use calcium carbonate as an antacid for more than 2 weeks unless advised by a doctor."
+      ],
+      "side_effects": [
+        "Upset stomach",
+        "Stomach pain",
+        "Belching",
+        "Constipation"
+      ],
+      "precautions": [
+        "Consult a doctor before use if kidney disease is present.",
+        "Calcium may affect absorption of some medicines."
+      ],
+      "drug_interactions": "Some medicines need to be separated from calcium carbonate; ask a pharmacist/doctor.",
+      "pregnancy": "Consult healthcare professional.",
+      "breastfeeding": "Consult healthcare professional.",
+      "allergy_info": "Check ingredients.",
+      "storage": "Follow package instructions; commonly stored at room temperature away from excess heat/moisture.",
+      "prescription_status": "Product-dependent; verify exact product.",
+      "pack_size": "Mock: 10 chewable tablets",
+      "sku": "MOCK-ANT-CACO3-10",
+      "mrp_inr": 40,
+      "selling_price_inr": 34,
+      "discount_percent": 15,
+      "stock_quantity": 42,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "ANT2605C",
+      "manufacturing_date": "2026-05",
+      "expiry_date": "2028-05",
+      "source": "MedlinePlus / verify exact package",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-CET-001",
+      "alternateId": "PROD-MED-007",
+      "product_name": "Cetirizine 10 mg Tablet",
+      "brand": "Generic / Store Medicine",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Allergy / Antihistamine",
+      "product_type": "Medicine",
+      "dosage_form": "Tablet",
+      "route": "Oral",
+      "active_ingredients": [
+        {
+          "name": "Cetirizine",
+          "strength": "10 mg"
+        }
+      ],
+      "purpose": "Relief of allergy symptoms",
+      "common_uses": [
+        "Sneezing",
+        "Runny nose",
+        "Itchy nose/throat",
+        "Itchy or watery eyes",
+        "Hives"
+      ],
+      "how_to_use": "Follow product label or healthcare professional's instructions.",
+      "food_requirement": "Can be taken with or without food.",
+      "side_effects": [
+        "Drowsiness can occur in some people."
+      ],
+      "warnings": [
+        "Check how the medicine affects you before driving or operating machinery.",
+        "Alcohol may increase drowsiness."
+      ],
+      "precautions": [
+        "Consult a doctor/pharmacist for kidney problems or other relevant conditions."
+      ],
+      "drug_interactions": "Check with pharmacist/doctor for other medicines.",
+      "allergy_info": "Avoid if allergic to cetirizine or formulation ingredients.",
+      "pregnancy": "Consult healthcare professional.",
+      "breastfeeding": "Consult healthcare professional.",
+      "prescription_status": "Verify the exact Indian product.",
+      "pack_size": "Mock: 10 tablets",
+      "sku": "MOCK-CET-10MG-10",
+      "mrp_inr": 20,
+      "selling_price_inr": 16,
+      "discount_percent": 20,
+      "stock_quantity": 65,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "CET2607B",
+      "manufacturing_date": "2026-07",
+      "expiry_date": "2028-06",
+      "source": "MedlinePlus / current Indian product listing",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-ANTI-001",
+      "alternateId": "PROD-MED-008",
+      "product_name": "Topical Antiseptic Solution",
+      "brand": "Specific stocked brand required",
+      "category": "Medicines & Healthcare",
+      "subcategory": "First Aid / Antiseptic",
+      "product_type": "Healthcare Product",
+      "dosage_form": "Topical Solution",
+      "route": "External",
+      "purpose": "Antiseptic cleansing of minor skin injuries according to the exact product label.",
+      "common_uses": [
+        "Minor cuts",
+        "Scrapes",
+        "Minor burns",
+        "Skin antiseptic"
+      ],
+      "active_ingredients": [
+        {
+          "name": "Povidone-Iodine",
+          "strength": "10% w/v (available iodine 1% w/v)"
+        }
+      ],
+      "strength": "10% w/v",
+      "how_to_use": "Use only according to the exact product label.",
+      "external_use": true,
+      "oral_use": false,
+      "warnings": [
+        "Avoid eyes unless the product specifically permits use.",
+        "Do not assume suitability for broken skin without checking the formulation."
+      ],
+      "side_effects": [
+        "Local irritation or allergic reaction may occur."
+      ],
+      "allergy_info": "Check active and inactive ingredients.",
+      "pregnancy": "Check exact formulation with a healthcare professional.",
+      "breastfeeding": "Check exact formulation with a healthcare professional.",
+      "children": "Follow exact product label.",
+      "manufacturer": "Verify from actual product.",
+      "prescription_status": "Verify exact product.",
+      "pack_size": "Mock: 100 ml",
+      "sku": "MOCK-ANTISEPTIC-100",
+      "mrp_inr": 85,
+      "selling_price_inr": 72,
+      "discount_percent": 15,
+      "stock_quantity": 25,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "ANT2606A",
+      "manufacturing_date": "2026-06",
+      "expiry_date": "2028-05",
+      "source": "Mock store record; exact manufacturer/product must be verified",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-CAL-001",
+      "alternateId": "PROD-MED-009",
+      "product_name": "Calamine Lotion 10%",
+      "brand": "Example generic calamine product",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Skin Care / Skin Irritation",
+      "product_type": "Topical Lotion",
+      "dosage_form": "Lotion",
+      "route": "External",
+      "active_ingredients": [
+        {
+          "name": "Calamine",
+          "strength": "10% w/v"
+        }
+      ],
+      "purpose": "Soothing minor skin irritation and itching",
+      "common_uses": [
+        "Minor skin irritation",
+        "Itching",
+        "Dermatitis, depending on product label"
+      ],
+      "how_to_use": "Apply to clean, dry affected area according to label.",
+      "external_use": true,
+      "oral_use": false,
+      "warnings": [
+        "Avoid contact with eyes.",
+        "Check exact formulation before use."
+      ],
+      "side_effects": [
+        "Local irritation or allergic reaction may occur."
+      ],
+      "children": "Check exact product label.",
+      "pregnancy": "Consult healthcare professional if needed.",
+      "breastfeeding": "Consult healthcare professional if needed.",
+      "storage": "Follow package instructions; store in a cool place away from direct sunlight.",
+      "manufacturer": "Verify exact product.",
+      "prescription_status": "Verify exact product.",
+      "pack_size": "Mock: 100 ml",
+      "sku": "MOCK-CALAMINE-100",
+      "mrp_inr": 90,
+      "selling_price_inr": 75,
+      "discount_percent": 17,
+      "stock_quantity": 30,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "CAL2608L",
+      "manufacturing_date": "2026-08",
+      "expiry_date": "2028-07",
+      "source": "Current Indian product listing; exact formulation must be verified",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-PGEL-001",
+      "alternateId": "PROD-MED-010",
+      "product_name": "Diclofenac Pain Relief Gel",
+      "brand": "Generic / Store Medicine",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Topical Pain Relief",
+      "product_type": "Medicine",
+      "dosage_form": "Gel",
+      "route": "Topical / External",
+      "active_ingredients": [
+        {
+          "name": "Diclofenac Diethylamine",
+          "strength": "Example 1.16% w/w, equivalent to diclofenac sodium 1% w/w"
+        }
+      ],
+      "purpose": "Local relief of pain/discomfort in affected areas",
+      "common_uses": [
+        "Muscle strain",
+        "Joint discomfort",
+        "Back pain",
+        "Sprain/strain-related discomfort"
+      ],
+      "how_to_use": "Apply gently to the affected area according to product instructions.",
+      "external_use": true,
+      "oral_use": false,
+      "warnings": [
+        "Avoid contact with eyes.",
+        "Avoid broken skin unless the label specifically permits it."
+      ],
+      "side_effects": [
+        "Local skin irritation may occur."
+      ],
+      "precautions": [
+        "Seek professional advice if allergic to diclofenac/NSAIDs or using other NSAIDs."
+      ],
+      "drug_interactions": "Check with pharmacist/doctor, especially when using other NSAIDs.",
+      "pregnancy": "Consult healthcare professional.",
+      "breastfeeding": "Consult healthcare professional.",
+      "allergy_info": "Check diclofenac/NSAID allergy history with a healthcare professional.",
+      "storage": "Follow package label; store below 25°C.",
+      "prescription_status": "Verify exact product.",
+      "pack_size": "Mock: 30 g",
+      "sku": "MOCK-DICLO-GEL-30",
+      "mrp_inr": 120,
+      "selling_price_inr": 99,
+      "discount_percent": 18,
+      "stock_quantity": 28,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "DIC2607G",
+      "manufacturing_date": "2026-07",
+      "expiry_date": "2028-06",
+      "source": "Current Indian product listing; verify actual package",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-MOOV-001",
+      "alternateId": "PROD-MED-011",
+      "product_name": "Moov Pain Relief Cream",
+      "brand": "Moov",
+      "manufacturer_marketer": "Reckitt",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Topical Pain Relief",
+      "product_type": "Topical Pain Relief",
+      "dosage_form": "Cream",
+      "route": "External",
+      "purpose": "Topical relief for muscle/joint discomfort according to product information",
+      "common_uses": [
+        "Backache",
+        "Joint pain",
+        "Muscular pain",
+        "Sprains"
+      ],
+      "active_ingredients": [
+        {
+          "name": "Wintergreen Oil",
+          "strength": "15%"
+        },
+        {
+          "name": "Eucalyptus Oil",
+          "strength": "2%"
+        },
+        {
+          "name": "Turpentine Oil",
+          "strength": "3%"
+        },
+        {
+          "name": "Mint Extract",
+          "strength": "5%"
+        }
+      ],
+      "how_to_use": "Apply a small amount to the affected area and massage gently according to product directions.",
+      "external_use": true,
+      "oral_use": false,
+      "warnings": [
+        "Avoid eyes.",
+        "Do not apply to damaged skin.",
+        "Avoid combining with heating pads or tight coverings unless the label permits."
+      ],
+      "side_effects": [
+        "Skin irritation, redness or burning sensation can occur."
+      ],
+      "children": "Follow product-specific warning.",
+      "pregnancy": "Consult doctor before use.",
+      "breastfeeding": "Consult doctor before use.",
+      "storage": "Cool, dry place away from sunlight.",
+      "prescription_status": "Verify exact product.",
+      "pack_size": "Mock: 30 g",
+      "sku": "MOCK-MOOV-30",
+      "mrp_inr": 110,
+      "selling_price_inr": 95,
+      "discount_percent": 14,
+      "stock_quantity": 18,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "MOOV2608",
+      "manufacturing_date": "2026-08",
+      "expiry_date": "2028-07",
+      "source": "Moov product information / current product listing",
+      "last_verification": "2026-09",
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    },
+    {
+      "id": "MED-MENTHO-001",
+      "alternateId": "PROD-MED-015",
+      "product_name": "Mentho Plus Balm",
+      "brand": "Mentho Plus",
+      "instagramVideoPostUrl": "https://www.instagram.com/p/DeZeCmnOEcM/?rpxt=MWJkeWx6M2c0OTk4Yg==",
+      "instagramPostUrl": "https://www.instagram.com/p/DeZeCmnOEcM/?rpxt=MWJkeWx6M2c0OTk4Yg==",
+      "instagramPostId": "DeZeCmnOEcM",
+      "manufacturer_marketer": "Emami Ltd",
+      "category": "Medicines & Healthcare",
+      "subcategory": "Topical Pain Relief",
+      "product_type": "Topical Balm",
+      "dosage_form": "Balm",
+      "route": "External",
+      "purpose": "Temporary relief of minor aches/discomfort and headache according to product information",
+      "common_uses": [
+        "Headache",
+        "Cold-related body aches",
+        "Minor muscular aches"
+      ],
+      "active_ingredients": [
+        {
+          "name": "Menthol",
+          "strength": "18% w/w"
+        },
+        {
+          "name": "Camphor",
+          "strength": "10% w/w"
+        },
+        {
+          "name": "Wintergreen Oil",
+          "strength": "8% w/w"
+        },
+        {
+          "name": "Eucalyptus Oil",
+          "strength": "12% w/w"
+        },
+        {
+          "name": "Clove Oil",
+          "strength": "2% w/w"
+        }
+      ],
+      "how_to_use": "Apply a small amount externally to the relevant area according to product label.",
+      "external_use": true,
+      "oral_use": false,
+      "warnings": [
+        "Avoid eyes.",
+        "Avoid damaged skin unless the label says otherwise."
+      ],
+      "side_effects": [
+        "Skin irritation may occur."
+      ],
+      "children": "Follow exact package instructions.",
+      "pregnancy": "Consult healthcare professional.",
+      "breastfeeding": "Consult healthcare professional.",
+      "storage": "Store according to package instructions.",
+      "prescription_status": "Verify exact product.",
+      "pack_sizes": [
+        "0.9 ml",
+        "8 ml",
+        "25 ml"
+      ],
+      "pack_size": "Mock: 8 ml",
+      "sku": "MOCK-MENTHO-8ML",
+      "mrp_inr": 44,
+      "selling_price_inr": 40,
+      "discount_percent": 9,
+      "stock_quantity": 35,
+      "delivery": "Quick delivery within 20 minutes (Instant Express) or Same-day delivery",
+      "return_policy": "Mock: Medicines are not returnable after dispatch except eligible damaged/wrong-product cases.",
+      "batch_number": "MENT2607",
+      "manufacturing_date": "2026-07",
+      "expiry_date": "2028-06",
+      "source": "Current Indian product listing; verify actual package",
+      "last_verification": "2026-09",
+      "healthcareDetails": {
+        "verified": true,
+        "schemaVersion": "2.0",
+        "isHealthcareProduct": true,
+        "demoDataNotice": "Healthcare guidance must be verified against actual product packaging and an authoritative manufacturer source before clinical use.",
+        "productInformation": {
+          "productName": "Mentho Plus Balm",
+          "brand": "Emami",
+          "sku": "MOCK-MENTHO-8ML",
+          "alternateId": "PROD-MED-015",
+          "manufacturer": "Emami Limited",
+          "manufacturerAddress": "687, Anandapur, EM Bypass, Kolkata - 700 107, West Bengal, India",
+          "ingredients": "Pudina ka Phool (Mentha arvensis) 18.0% w/w, Kapoor (Camphor) 10.0% w/w, Nilgiri Tel (Eucalyptus globulus) 12.0% w/w, Lavang Tel (Clove oil) 2.0% w/w, Gaultheria Tel (Wintergreen) 8.0% w/w, Ointment Base q.s.",
+          "activeIngredients": [
+            {
+              "name": "Pudina ka Phool (Mentha arvensis)",
+              "strength": "18.0% w/w"
+            },
+            {
+              "name": "Kapoor (Camphor)",
+              "strength": "10.0% w/w"
+            },
+            {
+              "name": "Nilgiri Tel (Eucalyptus globulus)",
+              "strength": "12.0% w/w"
+            },
+            {
+              "name": "Lavang Tel (Clove oil)",
+              "strength": "2.0% w/w"
+            },
+            {
+              "name": "Gaultheria Tel (Wintergreen)",
+              "strength": "8.0% w/w"
+            }
+          ],
+          "strength": "Cooling Analgesic Herbal Balm",
+          "dosageForm": "Topical Ayurvedic Balm",
+          "packSize": "50g Jar (also available in 10g / 8ml sample sizes)",
+          "approvedUses": "Fast cool-action relief from tension headaches, congestion, sinus heaviness, cold aches, and minor muscular aches.",
+          "officialProductUrl": "https://www.emamiltd.in"
+        },
+        "usageInstructions": {
+          "applicationMethod": "External topical application only. Gently massage a small amount onto forehead, temples, back of neck, or chest. Inhale aroma gently. Do not apply inside nostrils.",
+          "amountPerApplication": "Small pea-sized amount per application (approx. 0.2g to 0.5g).",
+          "applicationFrequency": "Repeat 2 to 3 times daily as needed.",
+          "maximumDuration": "Not verified on packaging; consult healthcare professional if pain persists beyond 7 days.",
+          "packageInstructions": "Gently massage a small amount onto affected area. For external application only. Keep lid tightly closed.",
+          "missedApplicationGuidance": "Apply when remembered if discomfort persists; do not double apply or use excessive quantity.",
+          "status": "verified_label"
+        },
+        "childrenSafety": {
+          "minimumApprovedAge": 6,
+          "ageRestrictions": "Suitable for adults and children 6 years and older. Not recommended for infants and toddlers under 2 years.",
+          "adultSupervisionRequired": true,
+          "childSpecificWarnings": "Keep strictly out of reach of children. Do not apply directly to nostrils, mouth, or near breathing zones of young children.",
+          "accidentalIngestionGuidance": "If swallowed by a child, seek emergency medical assistance or contact a poison control center immediately. Do not induce vomiting without medical guidance.",
+          "status": "verified_label"
+        },
+        "warningsAndPrecautions": {
+          "contraindications": "Hypersensitivity or known allergy to camphor, menthol, clove oil, or wintergreen.",
+          "allergiesAndSensitivities": "Contains herbal essential oils (clove, camphor, wintergreen). If skin rash or severe irritation develops, discontinue use immediately.",
+          "brokenOrIrritatedSkin": "Do not apply on open wounds, cuts, damaged, or irritated skin.",
+          "eyeContactPrecautions": "Strictly avoid contact with eyes and mucous membranes. If accidental eye contact occurs, flush immediately with copious cool running water for 15 minutes.",
+          "inhalationPrecautions": "Inhale aroma gently; do not insert balm directly inside nostrils.",
+          "pregnancyAndBreastfeeding": "Consult a healthcare professional or doctor before use during pregnancy or breastfeeding.",
+          "interactions": "No known systemic drug interactions when used topically as directed; avoid combining simultaneously with other heating topical ointments on the same skin area.",
+          "status": "verified_label"
+        },
+        "sideEffectsAndEmergencyGuidance": {
+          "knownCommonSideEffects": "Mild localized cooling, tingling sensation, or transient skin redness if applied excessively.",
+          "seriousReactionSigns": "Severe burning, skin blistering, hives, difficulty breathing, or facial/throat swelling.",
+          "reactionActionGuidance": "Discontinue use immediately, gently wash the area with mild soap and water, and seek medical advice if irritation persists.",
+          "accidentalIngestionGuidance": "Do not induce vomiting. Rinse mouth thoroughly and seek urgent local medical help or hospital emergency department immediately.",
+          "whenToContactPharmacist": "Contact a pharmacist or doctor if headache or muscle aches persist for more than 7 days, worsen, or recur frequently.",
+          "whenToSeekUrgentMedicalHelp": "Seek urgent emergency medical help immediately in case of accidental ingestion, severe allergic reaction (anaphylaxis), breathing difficulty, or contact with eyes causing persistent severe pain.",
+          "status": "verified_label"
+        },
+        "storageAndVerification": {
+          "storageTemperature": "Store below 30°C in a cool, dry place away from direct heat and sunlight.",
+          "protectionFromSunlightAndMoisture": "Keep jar tightly closed to preserve aromatic herbal essential oils and prevent drying.",
+          "keepOutOfReachOfChildren": true,
+          "batchNumber": "EMP-2026-555",
+          "manufacturingDate": "2026-01-25",
+          "expiryDate": "2028-12-31",
+          "manufacturerVerificationStatus": "verified_authentic",
+          "ingredientVerificationStatus": "verified_label",
+          "sourceUrl": "https://www.emamiltd.in",
+          "lastVerificationDate": "2026-08-14",
+          "status": "verified_label"
+        },
+        "ingredients": "Pudina ka Phool (Mentha arvensis) 18.0% w/w, Kapoor (Camphor) 10.0% w/w, Nilgiri Tel (Eucalyptus globulus) 12.0% w/w, Lavang Tel (Clove oil) 2.0% w/w, Gaultheria Tel (Wintergreen) 8.0% w/w, Ointment Base q.s.",
+        "activeIngredients": "Pudina ka Phool 18%, Kapoor 10%, Nilgiri Tel 12%, Gaultheria Tel 8%, Lavang Tel 2%",
+        "approvedUses": "Fast relief from tension headaches, congestion, sinus heaviness, cold aches, and muscle soreness.",
+        "directions": "Gently massage a small amount onto forehead, temples, back of the neck, or chest. Inhale aroma gently. Repeat 2 to 3 times daily as needed.",
+        "ageRestrictions": "Suitable for adults and children 6 years and older. Not for infants under 2 years.",
+        "warnings": "For external application only. Keep away from eyes, nostrils, and mucous membranes. Do not apply directly inside nostrils.",
+        "sideEffects": "Local tingling or cooling sensation; transient redness if applied excessively.",
+        "allergyInfo": "Contains herbal essential oils (clove, camphor, wintergreen). Stop use if irritation occurs.",
+        "pregnancyBreastfeeding": "Consult doctor before use during pregnancy or breastfeeding.",
+        "brokenSkin": "Do not apply to broken, wounded, or irritated skin.",
+        "eyeContact": "Avoid eye contact. In case of accidental contact, flush with cool running water for 15 minutes."
+      },
+      "alternateIds": [
+        "MED-MENTHO-001",
+        "MED-BALM-001",
+        "MOCK-MENTHO-8ML"
+      ],
+      "quickDeliveryAvailable": true,
+      "quickDeliveryTime": "Within 20 minutes",
+      "quickDeliveryMinutes": 20,
+      "quickDeliveryDescription": "Quick delivery within 20 minutes available for urgent healthcare orders in supported areas.",
+      "deliveryDays": "Quick delivery within 20 minutes or Same-day delivery",
+      "deliveryInfo": "Quick delivery within 20 minutes (Instant Express) in supported areas, or Same-day / 2-4 business days delivery across India. Free shipping above ₹499."
+    }
+  ],
+  "question_categories": {
+    "basic_product_questions": [
+      "What is this medicine?",
+      "What is the name of this product?",
+      "What is this medicine used for?",
+      "What is the purpose of this product?",
+      "What are the benefits of this medicine?",
+      "Is this a medicine or healthcare product?",
+      "Which category does this product belong to?",
+      "Is this product suitable for my requirement?"
+    ],
+    "usage_questions": [
+      "How do I use this medicine?",
+      "How should I take/use this product?",
+      "When should I use it?",
+      "How often should it be used?",
+      "Should it be taken before or after food?",
+      "Can I use it daily?",
+      "How long can I use it?",
+      "Can this product be used externally?",
+      "Can this medicine be taken orally?",
+      "How should this cream/gel/lotion be applied?"
+    ],
+    "dosage_strength_questions": [
+      "What is the strength?",
+      "What dosage forms are available?",
+      "What pack sizes are available?",
+      "What is the recommended dosage?",
+      "Is this available in different strengths?",
+      "Do you have 500 mg?",
+      "Do you have 650 mg?",
+      "Which strength is available in stock?"
+    ],
+    "ingredients_questions": [
+      "What are the ingredients?",
+      "What is the active ingredient?",
+      "What is the composition?",
+      "Does it contain Paracetamol?",
+      "Does it contain Cetirizine?",
+      "Does it contain Calcium Carbonate?",
+      "What are the inactive ingredients?",
+      "Does it contain any allergens?"
+    ],
+    "side_effects_questions": [
+      "What are the side effects?",
+      "Does this medicine have any side effects?",
+      "What are the common side effects?",
+      "Are there any serious side effects mentioned?",
+      "What should I do if I experience side effects?",
+      "Can this product cause an allergic reaction?"
+    ],
+    "warnings_precautions": [
+      "What are the warnings?",
+      "What precautions should I take?",
+      "Who should not use this medicine?",
+      "Are there any contraindications?",
+      "Is this safe for children?",
+      "Is this suitable for elderly people?",
+      "Are there any special precautions?",
+      "When should I stop using it and seek medical help?"
+    ],
+    "age_questions": [
+      "Can children use this product?",
+      "What is the minimum age?",
+      "Is it suitable for babies?",
+      "Is it suitable for teenagers?",
+      "Is it suitable for adults?",
+      "Is it suitable for elderly people?"
+    ],
+    "interaction_questions": [
+      "Can I take this with another medicine?",
+      "Does this medicine interact with other medicines?",
+      "Can I take Paracetamol with this?",
+      "Can I use this with another pain-relief product?",
+      "Are there any known drug interactions?",
+      "Can I take this medicine with my existing medication?"
+    ],
+    "allergy_questions": [
+      "Does this product contain allergens?",
+      "Can someone with an allergy use it?",
+      "Does it contain lactose/gluten/etc.?",
+      "What should I do if I am allergic to an ingredient?",
+      "Does this contain any ingredient I should avoid?"
+    ],
+    "pregnancy_breastfeeding": [
+      "Can pregnant women use this?",
+      "Can breastfeeding mothers use this?",
+      "Is this safe during pregnancy?",
+      "Are there pregnancy warnings?",
+      "Are there breastfeeding precautions?"
+    ],
+    "prescription_questions": [
+      "Is this medicine available without prescription?",
+      "Does this require a prescription?",
+      "Is this an OTC product?",
+      "Can I buy this without a prescription?"
+    ],
+    "manufacturer_questions": [
+      "Who manufactures this product?",
+      "Which company makes this medicine?",
+      "What is the manufacturer name?",
+      "Where is it manufactured?",
+      "What is the manufacturer's address?",
+      "Is the manufacturer information available?"
+    ],
+    "regulatory_questions": [
+      "Is this product licensed?",
+      "What is the licence number?",
+      "Is this product approved/registered?",
+      "What is the registration information?",
+      "Where can I find the licence information?"
+    ],
+    "batch_questions": [
+      "What is the batch number?",
+      "What is the manufacturing date?",
+      "What is the expiry date?",
+      "When does this product expire?",
+      "Is the batch information available?",
+      "Can you check the expiry date?"
+    ],
+    "storage_questions": [
+      "How should I store this medicine?",
+      "Should it be refrigerated?",
+      "Should it be kept away from sunlight?",
+      "What is the recommended storage temperature?",
+      "Can I store it at room temperature?"
+    ],
+    "availability_questions": [
+      "Is this medicine available?",
+      "Do you have this in stock?",
+      "How many are available?",
+      "Is this product currently in stock?",
+      "When will it be available?",
+      "Do you have another variant?",
+      "Do you have another brand?"
+    ],
+    "price_questions": [
+      "What is the price?",
+      "What is the MRP?",
+      "What is the current selling price?",
+      "Is there a discount?",
+      "Is there any offer?",
+      "What is the discounted price?",
+      "Is the price for one pack?"
+    ],
+    "pack_size_questions": [
+      "What pack sizes are available?",
+      "How many tablets are in the pack?",
+      "How much lotion/gel is in the package?",
+      "Do you have a larger pack?",
+      "Do you have a smaller pack?"
+    ],
+    "delivery_questions": [
+      "Can you deliver this medicine?",
+      "When will it be delivered?",
+      "Is home delivery available?",
+      "What is the delivery charge?",
+      "Can I get it today?",
+      "Can I get quick delivery within 20 minutes?",
+      "Is 20-minute delivery available for this medicine?",
+      "How fast can you deliver this healthcare product?",
+      "20 ನಿಮಿಷಗಳಲ್ಲಿ ತ್ವರಿತ ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆಯೇ?"
+    ],
+    "return_questions": [
+      "Can I return this product?",
+      "Can I exchange it?",
+      "What is the return policy?",
+      "Can I return an opened medicine?",
+      "What happens if I receive a damaged product?",
+      "What happens if I receive the wrong medicine?"
+    ],
+    "authenticity_questions": [
+      "Is this product genuine?",
+      "Is this an original product?",
+      "How can I verify its authenticity?",
+      "Is the manufacturer information verified?",
+      "Where did you get the product information from?",
+      "Can you show the official source?"
+    ],
+    "comparison_questions": [
+      "What is the difference between these two products?",
+      "What is the difference between two brands?",
+      "What is the difference between these two strengths?",
+      "What is the difference between tablets and syrup?",
+      "Do you have an alternative variant?",
+      "Are these products the same?",
+      "Do they have the same active ingredient?"
+    ],
+    "language_questions": [
+      "Paracetamol ಇದೆಯಾ?",
+      "Ee medicine yenu use?",
+      "Idanna hege use madbeku?",
+      "Side effects enu?",
+      "Price eshtu?",
+      "Stock alli ideya?",
+      "Expiry date yavaga?",
+      "Kannadadalli explain madi.",
+      "English alli heli.",
+      "Kannada ge switch madi."
+    ]
+  },
+  "ai_behavior": {
+    "product_identification": "Identify the exact product, brand, formulation, strength and pack size before answering product-specific questions.",
+    "inventory_priority": "Use current store inventory for stock, price, MRP, discount, batch, expiry, SKU, delivery and return policy.",
+    "medical_data_priority": "Use verified product/medical data for composition, general uses, directions, warnings, precautions and listed side effects.",
+    "unknown_data_response": "If a field is unavailable, say 'Not available in the verified product/store data' rather than guessing.",
+    "language_switch_commands": [
+      "Kannada ge switch madi",
+      "Kannadadalli explain madi",
+      "Switch to Kannada",
+      "English alli heli",
+      "Switch to English"
+    ],
+    "response_style": "Simple, clear, concise, customer-friendly language."
+  }
+}

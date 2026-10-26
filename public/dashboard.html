@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendVibe - AI Shopping Sales Voice Agent Console & CRM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes laserSweep {
+      0% { left: -20%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { left: 120%; opacity: 0; }
+    }
+    .laser-beam {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, rgba(56,189,248,0) 0%, #38bdf8 30%, #c084fc 70%, rgba(192,132,252,0) 100%);
+      box-shadow: 0 0 14px 3px rgba(56, 189, 248, 0.8), 0 0 28px 6px rgba(168, 85, 247, 0.5);
+      animation: laserSweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: 25;
+      pointer-events: none;
+    }
+    .magic-blur {
+      filter: blur(12px) brightness(0.7);
+      transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .magic-revealed {
+      filter: blur(0px) brightness(1.0);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+
+  <!-- TOP APP BAR -->
+  <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-40 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/index.html" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/20">
+          <i class="fas fa-headset text-lg"></i>
+        </a>
+        <div>
+          <h1 class="font-bold text-base leading-tight bg-gradient-to-r from-pink-400 via-rose-300 to-amber-200 bg-clip-text text-transparent">
+            TrendVibe AI Voice Sales Console
+          </h1>
+          <p class="text-[11px] text-slate-400">Instagram Lead Intake • ElevenLabs Voice • Gemini Analysis • Google Sheets CRM</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="/seller.html" class="flex items-center gap-1.5 text-xs font-bold text-white px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-600 to-rose-600 hover:opacity-95 shadow transition">
+          <i class="fas fa-boxes-stacked"></i> Seller Dashboard
+        </a>
+        <a href="/seller-login.html" class="flex items-center gap-1.5 text-xs font-semibold text-slate-200 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition">
+          <i class="fas fa-arrow-right-to-bracket text-pink-400"></i> Seller Login
+        </a>
+        <a href="/index.html" class="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900 transition">
+          <i class="fab fa-instagram text-pink-500"></i> Storefront
+        </a>
+        <button onclick="refreshDashboard()" class="flex items-center gap-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+          <i class="fas fa-sync-alt text-purple-400" id="refreshIcon"></i> Refresh
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- KPI STATS CARDS -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+          Total Leads <i class="fas fa-users text-pink-400"></i>
+        </span>
+        <div class="text-2xl font-black text-white mt-1" id="statTotalLeads">0</div>
+        <span class="text-[10px] text-emerald-400">From Instagram Reels</span>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+          Hot Leads <i class="fas fa-fire text-amber-500"></i>
+        </span>
+        <div class="text-2xl font-black text-amber-400 mt-1" id="statHotLeads">0</div>
+        <span class="text-[10px] text-amber-500/80">High Purchase Intent</span>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+          Calls Handled <i class="fas fa-phone text-blue-400"></i>
+        </span>
+        <div class="text-2xl font-black text-blue-400 mt-1" id="statCallsHandled">0</div>
+        <span class="text-[10px] text-blue-400/80">ElevenLabs + Twilio</span>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+          Orders Placed <i class="fas fa-shopping-bag text-emerald-400"></i>
+        </span>
+        <div class="text-2xl font-black text-emerald-400 mt-1" id="statOrders">0</div>
+        <span class="text-[10px] text-emerald-400/80">Verbal / Instant COD</span>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 col-span-2 sm:col-span-1">
+        <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+          Human Handoffs <i class="fas fa-user-shield text-rose-400"></i>
+        </span>
+        <div class="text-2xl font-black text-rose-400 mt-1" id="statHandoffs">0</div>
+        <span class="text-[10px] text-rose-400/80">Urgent Sales Queue</span>
+      </div>
+    </section>
+
+    <!-- LIVE TWO-WAY INTERACTIVE VOICE CALL AGENT & CRM CONSOLE -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+            <h2 class="text-base font-bold text-white">
+              Live Interactive AI Voice Call Center
+            </h2>
+            <span class="text-[10px] bg-pink-500/20 text-pink-400 font-bold px-2 py-0.5 rounded-full border border-pink-500/30">
+              Two-Way Microphone & Speech Enabled
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Click <strong>“Start Live Voice Call”</strong> to talk directly with Zyro AI using your microphone. Zyro AI speaks back in real time and checks live store stock.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Target Product Selector -->
+          <div class="flex items-center gap-1.5 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-xs">
+            <span class="text-slate-400">Target Product:</span>
+            <select id="activeCallProduct" class="bg-transparent text-white font-semibold focus:outline-none text-xs">
+              <optgroup label="Featured Catalog" class="bg-slate-900 text-white">
+                <option value="PROD-CLOTH-001">TrendVibe Heavyweight Oversized Tee</option>
+                <option value="PROD-PHONE-005">Apple iPhone 16</option>
+                <option value="PROD-LAP-001">ZenBook Aero 14 AI Laptop</option>
+                <option value="PROD-ELEC-001">SonicBoom Elite ANC Headphones</option>
+                <option value="PROD-SHOE-001">CloudStride Carbon Running Shoes</option>
+              </optgroup>
+              <optgroup label="Medicines & Healthcare (Dataset v1.0)" class="bg-slate-900 text-white">
+                <option value="MED-PARA-001">Paracetamol 500 mg Tablet</option>
+                <option value="MED-ORS-001">ORS Powder (Electral Formula)</option>
+                <option value="MED-ANT-001">Calcium Carbonate Antacid 500 mg</option>
+                <option value="MED-CET-001">Cetirizine 10 mg Tablet</option>
+                <option value="MED-ANTI-001">Topical Antiseptic Solution 100 ml</option>
+                <option value="MED-CAL-001">Calamine Lotion 100 ml</option>
+                <option value="MED-PGEL-001">Diclofenac Pain Relief Gel 30 g</option>
+                <option value="MED-MOOV-001">Moov Pain Relief Cream 30 g</option>
+                <option value="MED-MENTHO-001">Mentho Plus Balm 8 ml</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Language Mode Toggle -->
+          <div class="flex items-center gap-1.5 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-xs">
+            <span class="text-slate-400"><i class="fas fa-language text-purple-400"></i> Mode:</span>
+            <select id="activeLanguageMode" class="bg-transparent text-white font-semibold focus:outline-none text-xs cursor-pointer" onchange="onLanguageModeChange()">
+              <option value="auto" selected>✨ Auto (Kannada ↔ Kannada | English ↔ English)</option>
+              <option value="kn">ಕನ್ನಡ (Recognize & Speak Kannada)</option>
+              <option value="en">English (Recognize & Speak English)</option>
+              <option value="kn_roman">Kanglish (Roman Kannada)</option>
+              <option value="kn_recognize_en_speak">Recognize Kannada & Speak English</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-4">
+        
+        <!-- LEFT: INTERACTIVE CALL INTERFACE (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+          
+          <!-- PHONE CALL SCREEN CONTAINER -->
+          <div class="bg-gradient-to-b from-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-inner min-h-[380px] flex flex-col justify-between">
+            
+            <!-- CALL HEADER & STATUS -->
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <div class="flex items-center gap-3">
+                <div class="relative">
+                  <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white text-xl shadow-lg shadow-pink-500/30" id="zyroAvatar">
+                    <i class="fas fa-headset"></i>
+                  </div>
+                  <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950" id="agentStatusDot"></span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm text-white flex items-center gap-1.5">
+                    Zyro AI
+                    <span class="text-[10px] font-normal bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full">Store AI Assistant</span>
+                  </h3>
+                  <p class="text-xs text-slate-400" id="callStatusText">Ready to connect • Click "Start Live Call"</p>
+                </div>
+              </div>
+
+              <!-- CALL TIMER BADGE -->
+              <div class="text-right">
+                <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800/80 text-emerald-400 border border-slate-700 block" id="activeCallTimer">
+                  00:00
+                </span>
+                <span class="text-[10px] text-slate-500" id="connectionModeLabel">Standby</span>
+              </div>
+            </div>
+
+            <!-- LIVE AUDIO WAVEFORM VISUALIZER -->
+            <div class="my-4 py-2 flex items-center justify-center gap-1.5 h-12 bg-slate-950/60 rounded-xl border border-slate-800/60" id="waveformContainer">
+              <div class="wave-bar w-1.5 h-3 bg-pink-500 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-5 bg-purple-500 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-8 bg-pink-400 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-4 bg-purple-400 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-6 bg-pink-500 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-3 bg-purple-500 rounded-full transition-all duration-150"></div>
+              <div class="wave-bar w-1.5 h-5 bg-pink-400 rounded-full transition-all duration-150"></div>
+              <span class="text-[11px] text-slate-400 ml-3 font-medium" id="audioWaveText">Mic idle</span>
+            </div>
+
+            <!-- CHAT DIALOG BUBBLES -->
+            <div class="flex-1 overflow-y-auto max-h-56 space-y-2.5 p-2 rounded-xl bg-slate-950/40 border border-slate-800/40 font-sans text-xs" id="dialogScrollArea">
+              <div class="flex items-start gap-2">
+                <div class="w-6 h-6 rounded-full bg-pink-600/40 flex items-center justify-center text-[10px] text-pink-300 font-bold shrink-0 mt-0.5">AI</div>
+                <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-2xl rounded-tl-none text-slate-200 max-w-[85%] leading-relaxed">
+                  Hi, I’m Zyro AI, your intelligent shopping and sales assistant. Tap <strong>"Start Live Call"</strong> and speak into your microphone to ask about stock, sizes, discounts, or place an order!
+                </div>
+              </div>
+            </div>
+
+            <!-- LIVE SPEECH INPUT PREVIEW -->
+            <div id="speechPreviewBar" class="hidden mt-2 p-2 rounded-lg bg-pink-500/10 border border-pink-500/30 text-xs text-pink-300 flex items-center gap-2">
+              <i class="fas fa-microphone text-pink-400 animate-pulse"></i>
+              <span class="text-slate-400">Hearing:</span>
+              <span id="interimSpeechText" class="font-medium text-white italic truncate">Listening...</span>
+            </div>
+
+          </div>
+
+          <!-- CALL CONTROLS & MANUAL FALLBACK INPUT -->
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button onclick="startInteractiveCall()" id="btnStartCall" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                <i class="fas fa-phone-alt"></i> Start Live Voice Call
+              </button>
+
+              <button onclick="toggleMicrophone()" id="btnMicToggle" disabled class="bg-slate-800 hover:bg-slate-700 text-slate-400 font-semibold text-xs py-3 px-4 rounded-xl border border-slate-700 flex items-center gap-2 transition">
+                <i class="fas fa-microphone" id="micIcon"></i> <span id="micBtnLabel">Mic Off</span>
+              </button>
+
+              <button onclick="endInteractiveCall()" id="btnEndCall" disabled class="bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold text-xs py-3 px-4 rounded-xl border border-rose-500/30 flex items-center gap-2 transition">
+                <i class="fas fa-phone-slash"></i> End Call & Analyze
+              </button>
+            </div>
+
+            <!-- TEXT FALLBACK (FOR BROWSERS WITHOUT MIC PERMISSION) -->
+            <div class="flex gap-2">
+              <input type="text" id="manualChatInput" placeholder="Or type your question here and press Enter (e.g. Is XL in stock?)..."
+                onkeypress="if(event.key==='Enter') sendManualChatMessage()"
+                class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-pink-500">
+              <button onclick="sendManualChatMessage()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700">
+                <i class="fas fa-paper-plane text-pink-400"></i> Send
+              </button>
+            </div>
+
+            <!-- DYNAMIC SUGGESTED QUESTION BUTTONS -->
+            <div class="pt-1">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                <span class="font-semibold text-pink-400 flex items-center gap-1">
+                  <i class="fas fa-sparkles"></i> Suggested Questions (Predictive Next Steps)
+                </span>
+                <span id="dashSuggestionsCount" class="text-[9px] bg-slate-900 px-1.5 py-0.5 rounded text-slate-400 font-mono">5-8 questions</span>
+              </div>
+              <div id="dashDynamicSuggestions" class="flex flex-wrap gap-1">
+                <!-- Dynamically populated from product dataset -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: LIVE PRODUCT VISUALIZER & GEMINI INTELLIGENCE (5 Cols) -->
+        <div class="lg:col-span-5 bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3">
+          <div>
+            <!-- LIVE PRODUCT VISUALIZER CARD -->
+            <div id="dashVisCard" class="p-3 bg-slate-900 border border-slate-800 rounded-xl mb-3 space-y-2 relative overflow-hidden transition-all duration-300">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-pink-400">Live Product Visualizer</span>
+                </div>
+                <span id="dashVisCategory" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full capitalize border border-slate-700">Clothing</span>
+              </div>
+              <div class="flex gap-3 items-center">
+                <div id="dashVisMediaBox" class="w-24 h-24 rounded-lg overflow-hidden shrink-0 bg-slate-950 relative border border-slate-800 transition-all duration-200">
+                  <div id="dashVisScanner" class="laser-beam hidden"></div>
+                  <img id="dashVisImage" src="/images/oversized_tee.png" class="w-full h-full object-cover magic-revealed" alt="Product Visualizer">
+                  <span id="dashVisDiscount" class="absolute top-1 left-1 bg-rose-600 text-white font-bold text-[9px] px-1.5 py-0.5 rounded z-20">33% OFF</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 id="dashVisTitle" class="font-bold text-xs text-white truncate">TrendVibe Heavyweight Oversized Graphic Tee</h4>
+                  <div class="flex items-baseline gap-2 mt-0.5">
+                    <span id="dashVisSalePrice" class="text-sm font-black text-pink-400">₹1,199</span>
+                    <span id="dashVisOrigPrice" class="text-[10px] text-slate-500 line-through">₹1,799</span>
+                  </div>
+                  <div class="text-[10px] text-emerald-400 font-semibold mt-1 flex items-center gap-1" id="dashVisStock">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> In Stock (24 available)
+                  </div>
+                  <div class="flex items-center gap-2 mt-1.5 text-[10px] text-slate-400">
+                    <a id="dashVisReelLink" href="#" target="_blank" class="hover:text-pink-400 flex items-center gap-1">
+                      <i class="fab fa-instagram text-pink-400"></i> <span id="dashVisReelText">Catalog Post</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i class="fas fa-brain text-purple-400"></i> Gemini Intelligence & Lead Score
+              </h3>
+              <span id="geminiLeadBadge" class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                READY
+              </span>
+            </div>
+
+            <!-- LAST TOOL CALLED MONITOR -->
+            <div class="mt-3 p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-semibold uppercase text-slate-400">Live Backend Tool Trigger</span>
+                <span id="liveToolBadge" class="text-[10px] font-mono font-bold text-pink-400">None</span>
+              </div>
+              <p id="liveToolDetails" class="text-[11px] text-slate-400 mt-1 font-mono">
+                Tool calls will appear here when you speak with Zyro AI.
+              </p>
+            </div>
+
+            <!-- EXECUTIVE SUMMARY -->
+            <div class="mt-3">
+              <span class="text-[10px] font-semibold uppercase text-slate-500 block">Executive Summary</span>
+              <p id="geminiSummaryText" class="text-xs text-slate-300 mt-0.5 leading-normal">
+                End the call to automatically trigger Gemini post-call intelligence extraction.
+              </p>
+            </div>
+
+            <!-- KEY EXTRACTED PARAMETERS -->
+            <div class="grid grid-cols-2 gap-2 mt-3 text-xs">
+              <div class="bg-slate-900 p-2 rounded-lg border border-slate-800/80">
+                <span class="text-[10px] text-slate-500 block">Purchase Intent</span>
+                <span id="geminiIntentText" class="font-bold text-pink-400">-</span>
+              </div>
+              <div class="bg-slate-900 p-2 rounded-lg border border-slate-800/80">
+                <span class="text-[10px] text-slate-500 block">Sentiment</span>
+                <span id="geminiSentimentText" class="font-bold text-emerald-400">-</span>
+              </div>
+              <div class="bg-slate-900 p-2 rounded-lg border border-slate-800/80">
+                <span class="text-[10px] text-slate-500 block">Lead Score (0-100)</span>
+                <span id="geminiScoreNumber" class="font-bold text-amber-400">-</span>
+              </div>
+              <div class="bg-slate-900 p-2 rounded-lg border border-slate-800/80">
+                <span class="text-[10px] text-slate-500 block">Human Handoff</span>
+                <span id="geminiHandoffText" class="font-bold text-slate-300">-</span>
+              </div>
+            </div>
+
+            <!-- EXTRACTED SPECS -->
+            <div class="mt-3">
+              <span class="text-[10px] font-semibold uppercase text-slate-500 block">Extracted Specs & Requirements</span>
+              <div id="geminiSpecsBox" class="text-[11px] font-mono text-slate-400 bg-slate-900 p-2 rounded-lg mt-0.5 border border-slate-800/80 max-h-24 overflow-y-auto">
+                None
+              </div>
+            </div>
+          </div>
+
+          <!-- RECOMMENDED NEXT ACTION -->
+          <div class="mt-2 pt-2 border-t border-slate-800">
+            <span class="text-[10px] font-semibold uppercase text-slate-500 block">Sales Team Action</span>
+            <p id="geminiActionText" class="text-xs text-amber-300 font-medium mt-0.5">
+              Waiting for call completion.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- DIRECT CELLULAR MOBILE PHONE CALLING WIDGET (TWILIO)          -->
+    <!-- ============================================================= -->
+    <section class="bg-gradient-to-br from-slate-900 to-purple-950/40 border border-purple-500/30 rounded-2xl p-5 shadow-2xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-600/30 text-purple-400 border border-purple-500/40 flex items-center justify-center text-lg shadow-lg shadow-purple-600/20">
+            <i class="fas fa-phone-volume"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-bold text-white">Direct Mobile Phone Calling (Bolna AI - India +91)</h2>
+              <span id="dashBolnaBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Checking Bolna...</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              AI-powered outbound voice calls to real Indian mobile numbers (+91) with Kannada and English conversations via Bolna AI.
+            </p>
+          </div>
+        </div>
+
+        <button onclick="openBolnaConfigModal()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 text-xs font-bold border border-purple-500/40 transition flex items-center gap-1.5 shadow-md cursor-pointer">
+          <i class="fas fa-cog text-purple-400"></i> <span id="dashBolnaBtnLabel">Configure Bolna Agent</span>
+        </button>
+      </div>
+
+      <!-- CALL FORM -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 pt-4">
+        <!-- Customer Mobile Number -->
+        <div class="md:col-span-5">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">
+            Customer Mobile Number <span class="text-rose-400">*</span>
+          </label>
+          <div class="flex">
+            <select id="directCallCountryCode" class="bg-slate-950 border border-slate-800 rounded-l-xl px-2.5 py-2.5 text-xs text-white focus:outline-none">
+              <option value="+91" selected>🇮🇳 +91 (India)</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+971">🇦🇪 +971</option>
+            </select>
+            <input type="tel" id="directCallPhoneNumber" placeholder="9876543210 (10-digit Indian Mobile)"
+              class="flex-1 bg-slate-950 border border-l-0 border-slate-800 rounded-r-xl px-3 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono">
+          </div>
+          <span class="text-[10px] text-slate-500 mt-1 block">Bolna AI will place a real call to this Indian mobile number</span>
+        </div>
+
+        <!-- Customer Name -->
+        <div class="md:col-span-3">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">Customer Name</label>
+          <input type="text" id="directCallCustomerName" placeholder="Valued Customer"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
+          <span class="text-[10px] text-slate-500 mt-1 block">Used in personalized greeting</span>
+        </div>
+
+        <!-- Call Language Preference -->
+        <div class="md:col-span-4">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">Call Voice Language</label>
+          <select id="directCallLanguageSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+            <option value="kn" selected>ಕನ್ನಡ (Kannada - Sarvam Bulbul/Saaras)</option>
+            <option value="en">English (Indian English)</option>
+            <option value="auto">✨ Bilingual Auto (Kannada ↔ English)</option>
+          </select>
+          <span class="text-[10px] text-slate-500 mt-1 block">Bolna AI voice persona language</span>
+        </div>
+
+        <!-- Product Discussed -->
+        <div class="md:col-span-4">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">Product Topic</label>
+          <select id="directCallProductSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500">
+            <option value="Apple iPhone 16">Apple iPhone 16</option>
+            <option value="TrendVibe Heavyweight Oversized Tee">TrendVibe Oversized Graphic Tee</option>
+            <option value="ZenBook Aero 14 AI Laptop">ZenBook Aero 14 AI Laptop</option>
+            <option value="Dell Inspiron 15 Laptop">Dell Inspiron 15 Laptop</option>
+            <option value="Paracetamol 500 mg Tablet">Paracetamol 500 mg Tablet</option>
+            <option value="Dolo 650 Tablet">Dolo 650 Tablet</option>
+            <option value="CloudStride Carbon Running Shoes">CloudStride Running Shoes</option>
+          </select>
+          <span class="text-[10px] text-slate-500 mt-1 block">Product Zyro AI will introduce</span>
+        </div>
+
+        <!-- Initial Question / Enquiry -->
+        <div class="md:col-span-8">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">Customer Enquiry Topic / Question</label>
+          <input type="text" id="directCallEnquiry" placeholder="Checking product availability, best discount price, and delivery timeline"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500">
+        </div>
+
+        <!-- TRAI Compliance Consent Checkbox -->
+        <div class="md:col-span-8 flex items-center gap-2 pt-1">
+          <input type="checkbox" id="directCallConsentCheckbox" checked
+            class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-purple-600 focus:ring-purple-500 cursor-pointer">
+          <label for="directCallConsentCheckbox" class="text-[11px] text-slate-300 cursor-pointer select-none">
+            <span class="font-bold text-emerald-400"><i class="fas fa-shield-alt"></i> TRAI Compliant:</span> Customer has provided explicit consent to receive automated phone call for product enquiry.
+          </label>
+        </div>
+
+        <!-- Call Button -->
+        <div class="md:col-span-4 flex items-end">
+          <button onclick="triggerDirectMobileCall()" id="btnTriggerMobileCall"
+            class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
+            <i class="fas fa-phone-volume"></i> <span id="mobileCallBtnText">Call Indian Mobile via Bolna AI</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CALL STATUS / FEEDBACK BANNER -->
+      <div id="directCallStatusBox" class="hidden mt-3.5 p-3 rounded-xl border text-xs flex items-center justify-between"></div>
+    </section>
+
+    <!-- CRM TABS SECTION (7 Google Sheets Sections) -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div class="border-b border-slate-800 px-4 sm:px-6 flex items-center justify-between overflow-x-auto">
+        <div class="flex items-center space-x-2 py-3" id="crmTabs">
+          <button onclick="switchTab('leads')" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-600 text-white transition">
+            Customer Leads (<span id="countLeadsTab">0</span>)
+          </button>
+          <button onclick="switchTab('products')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Products (<span id="countProductsTab">0</span>)
+          </button>
+          <button onclick="switchTab('calls')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Calls (<span id="countCallsTab">0</span>)
+          </button>
+          <button onclick="switchTab('conversations')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Conversations (<span id="countConvTab">0</span>)
+          </button>
+          <button onclick="switchTab('orders')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Sales/Orders (<span id="countOrdersTab">0</span>)
+          </button>
+          <button onclick="switchTab('followups')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+            Follow-ups (<span id="countFollowupsTab">0</span>)
+          </button>
+        </div>
+
+        <button onclick="downloadActiveCSV()" class="text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+          <i class="fas fa-file-csv text-emerald-400"></i> Download CSV
+        </button>
+      </div>
+
+      <!-- TAB 1: CUSTOMER LEADS TABLE -->
+      <div id="tabContent-leads" class="p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Lead ID</th>
+              <th class="p-2.5">Customer Name</th>
+              <th class="p-2.5">Phone</th>
+              <th class="p-2.5">Product Name</th>
+              <th class="p-2.5">Initial Enquiry</th>
+              <th class="p-2.5">Lead Score</th>
+              <th class="p-2.5">Status</th>
+              <th class="p-2.5">Action</th>
+            </tr>
+          </thead>
+          <tbody id="leadsTableBody" class="divide-y divide-slate-800">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB 2: PRODUCTS TABLE -->
+      <div id="tabContent-products" class="hidden p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Product ID</th>
+              <th class="p-2.5">Name</th>
+              <th class="p-2.5">Category</th>
+              <th class="p-2.5">Sale Price</th>
+              <th class="p-2.5">Stock</th>
+              <th class="p-2.5">COD</th>
+              <th class="p-2.5">Delivery</th>
+              <th class="p-2.5">Return Policy</th>
+              <th class="p-2.5">Video Post</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+
+      <!-- TAB 3: CALLS TABLE -->
+      <div id="tabContent-calls" class="hidden p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Call ID</th>
+              <th class="p-2.5">Lead ID</th>
+              <th class="p-2.5">Telephony SID</th>
+              <th class="p-2.5">Call Start</th>
+              <th class="p-2.5">Duration</th>
+              <th class="p-2.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="callsTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+
+      <!-- TAB 4: CONVERSATIONS TABLE -->
+      <div id="tabContent-conversations" class="hidden p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Lead ID</th>
+              <th class="p-2.5">Summary</th>
+              <th class="p-2.5">Intent</th>
+              <th class="p-2.5">Sentiment</th>
+              <th class="p-2.5">Requirements</th>
+              <th class="p-2.5">Human Handoff</th>
+            </tr>
+          </thead>
+          <tbody id="convTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+
+      <!-- TAB 5: ORDERS TABLE -->
+      <div id="tabContent-orders" class="hidden p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Order ID</th>
+              <th class="p-2.5">Lead ID</th>
+              <th class="p-2.5">Product</th>
+              <th class="p-2.5">Qty</th>
+              <th class="p-2.5">Variant</th>
+              <th class="p-2.5">Total</th>
+              <th class="p-2.5">Payment</th>
+              <th class="p-2.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+
+      <!-- TAB 6: FOLLOWUPS TABLE -->
+      <div id="tabContent-followups" class="hidden p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-2.5">Followup ID</th>
+              <th class="p-2.5">Lead ID</th>
+              <th class="p-2.5">Priority</th>
+              <th class="p-2.5">Reason</th>
+              <th class="p-2.5">Assigned Rep</th>
+              <th class="p-2.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="followupsTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // PRESET REALISTIC CUSTOMER TRANSCRIPTS
+    const SCENARIOS = {
+      scenario_clothing_soldout: {
+        product: 'TrendVibe Heavyweight Oversized Graphic Tee',
+        customer: 'Marcus Thorne',
+        phone: '+1 (555) 234-5678',
+        transcript: `AI: Hello Marcus! This is Zyro AI, the intelligent shopping and sales assistant from TrendVibe Store. I noticed you recently enquired on Instagram about our TrendVibe Heavyweight Oversized Graphic Tee. How can I assist you today?
+Customer: Hey Zyro AI! I saw the reel with the oversized tee. Is the black colour available in size XL?
+AI: Let me check our live warehouse inventory for you right away. [Tool Call: checkStock(query="TrendVibe Heavyweight Oversized Graphic Tee", size="XL", colour="Black")]
+AI: Thank you for waiting! Our Vintage Black in size XL is currently sold out due to high demand from our Instagram drop. However, we have size XL available in our Off-White and Earth Brown shades, and we also have size Large in Black. Would either of those work for you?
+Customer: Ah, I really needed XL. Does the Off-White look good? What's the price with discount?
+AI: [Tool Call: getPrice(productId="PROD-CLOTH-001")]
+AI: The Off-White is actually our bestselling colourway! It features the same 240 GSM heavy French terry cotton. It is currently on 20% sale for just $27.99, down from $34.99.
+Customer: That sounds great. Can I pay by Cash on Delivery?
+AI: [Tool Call: getPaymentOptions(productId="PROD-CLOTH-001")]
+AI: Yes, absolutely! We support Cash on Delivery with no extra surcharge. We also offer 7-day free doorstep returns and exchanges.
+Customer: Awesome! I want to buy this. Please place an order for one piece in Off-White, size XL.
+AI: [Tool Call: createOrder(productId="PROD-CLOTH-001", size="XL", colour="Off-White", quantity=1, paymentMethod="Cash on Delivery")]
+AI: Wonderful! Your order for the TrendVibe Oversized Graphic Tee in Off-White, size XL, has been confirmed. Your order ID is ORD-581920. It will arrive in 2 to 4 business days. Thank you for shopping with TrendVibe!`,
+        leadScore: 'Hot'
+      },
+
+      scenario_phone_specs: {
+        product: 'Apple iPhone 16',
+        customer: 'Devon Patel',
+        phone: '+1 (555) 345-6789',
+        transcript: `AI: Hello Devon! This is Zyro AI, the intelligent shopping and sales assistant from TrendVibe Store. I noticed you recently enquired on Instagram about our Apple iPhone 16. How can I assist you with that today?
+Customer: Hi! What processor does this phone have, and how long does the battery last?
+AI: [Tool Call: getProductDetails(productId="PROD-PHONE-005")]
+AI: The iPhone 16 is powered by the Apple A18 chip with a 6-core CPU, 5-core GPU, and 16-core Neural Engine on a 3nm architecture. It delivers up to 22 hours of video playback on a single charge!
+Customer: What about the RAM and storage? Does it come with warranty?
+AI: We offer two configurations: 8GB RAM with 128GB storage, and 8GB RAM with 256GB storage. It includes a 1-Year Apple Limited Warranty plus AppleCare+ eligibility.
+Customer: What's the sale price for the 128GB?
+AI: [Tool Call: getPrice(productId="PROD-PHONE-005")]
+AI: The 8GB+128GB variant is on sale for ₹79,900, with free insured delivery.
+Customer: Thanks! I'm comparing it with another device, but I'm very interested. Can you text me the specifications link?
+AI: Absolutely Devon, I will send the direct product specifications and discount link to your phone right away. Have a great day!`,
+        leadScore: 'Warm'
+      },
+
+      scenario_laptop_oled: {
+        product: 'ZenBook Aero 14 AI Ultraportable Laptop',
+        customer: 'Elena Rostova',
+        phone: '+1 (555) 789-0123',
+        transcript: `AI: Hello Elena! This is Zyro AI, the intelligent shopping and sales assistant from TrendVibe Store. I noticed you recently enquired on Instagram about our ZenBook Aero 14 AI Ultraportable Laptop. How can I assist you with that today?
+Customer: Hi Zyro AI, does this laptop have an OLED screen, and how heavy is it?
+AI: [Tool Call: getProductDetails(productId="PROD-LAP-001")]
+AI: Yes Elena! It features a 14-inch 2.8K 120Hz OLED HDR display with 100% DCI-P3 color accuracy. It is ultra-lightweight at only 1.18 kilograms (2.6 pounds) with an aerospace magnesium alloy body.
+Customer: Does it support no-cost EMI?
+AI: [Tool Call: getPaymentOptions(productId="PROD-LAP-001")]
+AI: Yes! We offer 0% No-Cost EMI for 3, 6, 9, and 12 months across all major credit cards.
+Customer: Perfect. I want to check with my manager for company reimbursement tomorrow.
+AI: Sounds great! We have 12 units currently in stock with 2-year onsite warranty. I will reserve your quotation.`,
+        leadScore: 'Warm'
+      },
+
+      scenario_human_handoff: {
+        product: 'UrbanShield 28L Anti-Theft Backpack',
+        customer: 'Captain Robert Miller',
+        phone: '+1 (555) 999-1122',
+        transcript: `AI: Hello Robert! This is Zyro AI, the intelligent shopping and sales assistant from TrendVibe Store. I noticed you recently enquired on Instagram about our UrbanShield 28L Backpack. How can I assist you with that today?
+Customer: Hello Zyro AI. We want to place an order of 75 units with custom company logo embroidery for our tech conference next month. Can your system handle custom bulk branding?
+AI: That sounds like a wonderful project! Custom corporate embroidery requires our business sales team to review logo vector artwork and configure wholesale volume discounting.
+Customer: Can you connect me with your corporate sales manager right now?
+AI: Certainly Robert! I am marking this enquiry as an urgent VIP human handoff. Our corporate sales director Marcus will contact you on this phone number within 15 minutes to assist with your bulk order. Thank you!`,
+        leadScore: 'Hot'
+      }
+    };
+
+    let currentTab = 'leads';
+    let isCallActive = false;
+    let callTimerSeconds = 0;
+    let callTimerInterval = null;
+    let recognition = null;
+    let mediaRecorder = null;
+    let mediaStream = null;
+    let recordedAudioChunks = [];
+    let recordingTimer = null;
+    let isListening = false;
+    let conversationTurns = [];
+    let audioCtx = null;
+    window.currentDashboardLanguage = 'en';
+
+    // --- SOUND EFFECTS (Web Audio API Synthesizer - Zero External Assets Required) ---
+    function playPhoneRingTone(callback) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) { if (callback) callback(); return; }
+        audioCtx = new AudioContext();
+
+        // 2 telephone ring pulses
+        const playTone = (freq1, freq2, startTime, duration) => {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.frequency.value = freq1;
+          osc2.frequency.value = freq2;
+
+          gain.gain.setValueAtTime(0.08, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(startTime);
+          osc2.start(startTime);
+          osc1.stop(startTime + duration);
+          osc2.stop(startTime + duration);
+        };
+
+        const now = audioCtx.currentTime;
+        playTone(440, 480, now, 0.4);
+        playTone(440, 480, now + 0.6, 0.4);
+
+        setTimeout(() => { if (callback) callback(); }, 1200);
+      } catch (e) {
+        if (callback) callback();
+      }
+    }
+
+    // --- SPEECH RECOGNITION (Customer Microphone) ---
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.warn('SpeechRecognition not supported in this browser.');
+        return null;
+      }
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = true;
+      rec.lang = window.currentDashboardLanguage === 'kn' ? 'kn-IN' : 'en-US';
+
+      rec.onstart = () => {
+        isListening = true;
+        setMicUI(true);
+        animateWaveform(true, 'Listening to you...');
+      };
+
+      rec.onresult = (event) => {
+        let interim = '';
+        let final = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final += event.results[i][0].transcript;
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        document.getElementById('interimSpeechText').innerText = final || interim || 'Listening...';
+        if (final && final.trim()) {
+          handleCustomerSpokenTurn(final.trim());
+        }
+      };
+
+      rec.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        isListening = false;
+        setMicUI(false);
+        const messages = {
+          'audio-capture': 'Microphone unavailable. Check your input device.',
+          'not-allowed': 'Microphone permission is blocked. Allow it for localhost.',
+          'service-not-allowed': 'Browser speech service is blocked. Use the text box below.',
+          network: 'Browser speech service is unavailable. Use the text box below.'
+        };
+        const message = messages[event.error] || 'Microphone could not start. Use the text box below.';
+        document.getElementById('speechPreviewBar').classList.remove('hidden');
+        document.getElementById('interimSpeechText').innerText = message;
+        animateWaveform(false, 'Mic needs attention');
+      };
+
+      rec.onend = () => {
+        isListening = false;
+        setMicUI(false);
+        animateWaveform(false, 'Mic idle');
+      };
+
+      return rec;
+    }
+
+    // --- LIVE PRODUCT VISUALIZER CONTROLLER ---
+    function updateDashboardProductVisualizer(p, skipQuestions = false) {
+      if (!p) return;
+      if (p.id && !skipQuestions) {
+        loadDashboardSuggestedQuestions(p.id, window.currentDashboardLanguage || 'en');
+      }
+      const img = document.getElementById('dashVisImage');
+      const scanner = document.getElementById('dashVisScanner');
+      const mediaBox = document.getElementById('dashVisMediaBox');
+
+      if (scanner) scanner.classList.remove('hidden');
+      if (img) {
+        img.classList.remove('magic-revealed');
+        img.classList.add('magic-blur');
+        if (p.imageUrl) img.src = p.imageUrl;
+      }
+      if (mediaBox) {
+        mediaBox.classList.add('ring-2', 'ring-cyan-400', 'shadow-lg', 'shadow-cyan-500/30');
+      }
+
+      setTimeout(() => {
+        if (img) {
+          img.classList.remove('magic-blur');
+          img.classList.add('magic-revealed');
+        }
+        if (scanner) scanner.classList.add('hidden');
+        if (mediaBox) {
+          mediaBox.classList.remove('ring-cyan-400', 'shadow-lg', 'shadow-cyan-500/30');
+        }
+      }, 950);
+
+      const title = document.getElementById('dashVisTitle');
+      if (title) title.innerText = p.name;
+
+      const category = document.getElementById('dashVisCategory');
+      if (category) category.innerText = p.category;
+
+      const salePrice = document.getElementById('dashVisSalePrice');
+      if (salePrice) salePrice.innerText = p.formattedPrice || (`₹` + Math.round(p.salePrice).toLocaleString('en-IN'));
+
+      const origPrice = document.getElementById('dashVisOrigPrice');
+      if (origPrice) origPrice.innerText = p.formattedOriginalPrice || (`₹` + Math.round(p.price).toLocaleString('en-IN'));
+
+      const discount = document.getElementById('dashVisDiscount');
+      if (discount) {
+        if (p.discountPercent > 0) {
+          discount.innerText = `${p.discountPercent}% OFF`;
+          discount.classList.remove('hidden');
+        } else {
+          discount.classList.add('hidden');
+        }
+      }
+
+      const stock = document.getElementById('dashVisStock');
+      if (stock) {
+        stock.innerHTML = p.inStock
+          ? `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> In Stock (${p.stockCount || 15} available)`
+          : `<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Sold Out`;
+        stock.className = p.inStock
+          ? 'text-[10px] text-emerald-400 font-semibold mt-1 flex items-center gap-1'
+          : 'text-[10px] text-rose-400 font-semibold mt-1 flex items-center gap-1';
+      }
+
+      const reelLink = document.getElementById('dashVisReelLink');
+      if (reelLink) reelLink.href = p.instagramVideoPostUrl || `https://www.instagram.com/reel/post_${p.id}/`;
+
+      const prodSelect = document.getElementById('activeCallProduct');
+      if (prodSelect) {
+        let opt = Array.from(prodSelect.options).find(o => o.value === p.id);
+        if (!opt) {
+          opt = new Option(p.name, p.id, true, true);
+          prodSelect.add(opt);
+        }
+        prodSelect.value = p.id;
+      }
+
+      const card = document.getElementById('dashVisCard');
+      if (card) {
+        card.classList.add('border-pink-500', 'shadow-lg', 'shadow-pink-500/20');
+        setTimeout(() => card.classList.remove('border-pink-500', 'shadow-lg', 'shadow-pink-500/20'), 1500);
+      }
+    }
+
+    // --- START LIVE INTERACTIVE CALL ---
+    async function startInteractiveCall(leadData = null) {
+      if (isCallActive) return;
+      isCallActive = true;
+      conversationTurns = [];
+
+      // Update UI buttons
+      document.getElementById('btnStartCall').disabled = true;
+      document.getElementById('btnStartCall').classList.add('opacity-50');
+      document.getElementById('btnEndCall').disabled = false;
+      document.getElementById('btnMicToggle').disabled = false;
+
+      const productId = document.getElementById('activeCallProduct').value;
+      const productSelect = document.getElementById('activeCallProduct');
+      const productName = productSelect.options[productSelect.selectedIndex].text;
+      const customerName = leadData ? leadData.customerName : 'Friend';
+
+      // Sync visualizer with active product
+      fetch(`/api/products/${productId}`).then(r => r.json()).then(d => {
+        if (d.success && d.product) updateDashboardProductVisualizer(d.product);
+      }).catch(() => {});
+
+      // Ringing state
+      document.getElementById('callStatusText').innerHTML = '<span class="text-amber-400 font-bold"><i class="fas fa-spinner fa-spin"></i> Outbound Ringing...</span>';
+      document.getElementById('connectionModeLabel').innerText = 'Calling';
+      animateWaveform(true, 'Dialing customer phone...');
+
+      playPhoneRingTone(() => {
+        if (!isCallActive) return;
+
+        // Connected state
+        document.getElementById('callStatusText').innerHTML = '<span class="text-emerald-400 font-bold"><i class="fas fa-circle"></i> Connected to Zyro AI</span>';
+        document.getElementById('connectionModeLabel').innerText = 'Call Active';
+        startTimer();
+
+        // Zyro AI's Dynamic Greeting
+        const greeting = `Namaste ${customerName}! I'm Zyro AI, your intelligent shopping and sales assistant from TrendVibe Store sellers. I saw your enquiry about the ${productName}. How can I help you today?`;
+        
+        appendChatBubble('ai', greeting);
+        conversationTurns.push({ role: 'ai', text: greeting });
+
+        speakAiMessage(greeting, () => {
+          // Once Zyro AI finishes speaking greeting, start listening to customer
+          if (isCallActive) startListening();
+        });
+      });
+    }
+
+    // --- HANDLE SPOKEN TURN FROM CUSTOMER ---
+    async function handleCustomerSpokenTurn(customerText) {
+      if (!customerText || !customerText.trim()) return;
+
+      stopListening();
+      appendChatBubble('customer', customerText);
+      conversationTurns.push({ role: 'customer', text: customerText, language: window.currentDashboardLanguage });
+
+      // Show processing status
+      document.getElementById('callStatusText').innerHTML = '<span class="text-purple-400 font-bold"><i class="fas fa-brain fa-pulse"></i> Zyro AI is checking warehouse data...</span>';
+      animateWaveform(true, 'Querying live store inventory...');
+
+      const productId = document.getElementById('activeCallProduct').value;
+      const langMode = document.getElementById('activeLanguageMode')?.value || 'auto';
+      const isRecognizeKnSpeakEn = (langMode === 'kn_recognize_en_speak');
+
+      try {
+        const res = await fetch('/api/voice/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: customerText,
+            productId,
+            history: conversationTurns,
+            language: langMode === 'auto' ? null : (isRecognizeKnSpeakEn ? null : langMode),
+            speakLanguage: isRecognizeKnSpeakEn ? 'en' : (langMode === 'kn' ? 'kn' : (langMode === 'en' ? 'en' : null)),
+            recognizeKannadaSpeakEnglish: isRecognizeKnSpeakEn
+          })
+        });
+
+        const data = await res.json();
+        const reply = data.reply || "I checked our warehouse, how else can I help you?";
+
+        if (data.language) {
+          window.currentDashboardLanguage = data.language;
+          if (recognition) {
+            if (langMode === 'auto') {
+              recognition.lang = (data.language === 'kn' ? 'kn-IN' : 'en-IN');
+            } else if (langMode === 'kn') {
+              recognition.lang = 'kn-IN';
+            } else if (langMode === 'en') {
+              recognition.lang = 'en-US';
+            }
+          }
+        }
+
+        // Live Product Visualizer sync
+        if (data.activeProduct) {
+          updateDashboardProductVisualizer(data.activeProduct, true);
+        }
+
+        // Dynamic Suggested Questions sync
+        if (Array.isArray(data.suggestedQuestions) && data.suggestedQuestions.length > 0) {
+          renderDashboardSuggestions(data.suggestedQuestions, data.stage);
+        }
+
+        // Update live tool monitor
+        if (data.toolCalled) {
+          document.getElementById('liveToolBadge').innerText = data.toolCalled;
+          document.getElementById('liveToolDetails').innerText = `Executed tool "${data.toolCalled}" for live factual verification.`;
+        }
+
+        appendChatBubble('ai', reply, data.toolCalled);
+        conversationTurns.push({ role: 'ai', text: reply, language: data.language || window.currentDashboardLanguage, toolCalled: data.toolCalled });
+
+        document.getElementById('callStatusText').innerHTML = '<span class="text-emerald-400 font-bold"><i class="fas fa-volume-high"></i> Zyro AI is speaking...</span>';
+
+        // If order was confirmed, stop AI listening / taking further input and conclude call
+        if (data.toolCalled === 'createOrder' || data.orderConfirmed || data.stopTakingInput) {
+          isCallActive = false;
+          stopListening();
+          document.getElementById('callStatusText').innerHTML = '<span class="text-emerald-400 font-bold"><i class="fas fa-check-circle"></i> Order Confirmed! Call Concluded.</span>';
+          speakAiMessage(reply, () => {
+            const startBtn = document.getElementById('startCallBtn');
+            const endBtn = document.getElementById('endCallBtn');
+            if (startBtn) startBtn.classList.remove('hidden');
+            if (endBtn) endBtn.classList.add('hidden');
+            const ind = document.getElementById('callStatusIndicator');
+            if (ind) ind.className = 'w-4 h-4 rounded-full bg-slate-500';
+          });
+          return;
+        }
+
+        // If customer expressed negative reaction or call ended politely:
+        if (data.toolCalled === 'endCallPolite' || data.endCall) {
+          isCallActive = false;
+          stopListening();
+          speakAiMessage(reply, () => {
+            endInteractiveCall();
+          });
+          return;
+        }
+
+        speakAiMessage(reply, () => {
+          // When Zyro AI finishes speaking, listen to user again!
+          if (isCallActive) {
+            document.getElementById('callStatusText').innerHTML = '<span class="text-pink-400 font-bold"><i class="fas fa-microphone"></i> Zyro AI is listening to you... Speak now!</span>';
+            startListening();
+          }
+        });
+
+      } catch (err) {
+        console.error('Error processing turn:', err);
+        const fallback = "I apologize, I had a momentary connection hiccup. Could you please repeat that?";
+        appendChatBubble('ai', fallback);
+        speakAiMessage(fallback, () => {
+          if (isCallActive) startListening();
+        });
+      }
+    }
+
+    // --- DYNAMIC SUGGESTED QUESTIONS (CRM CONSOLE) ---
+    function renderDashboardSuggestions(questions, stage = null) {
+      const container = document.getElementById('dashDynamicSuggestions');
+      if (!container) return;
+      container.innerHTML = '';
+      const countEl = document.getElementById('dashSuggestionsCount');
+      if (countEl) {
+        const stageTag = stage ? `<span class="text-pink-400 font-bold">${stage.replace('_', ' ').toUpperCase()}</span> • ` : '';
+        countEl.innerHTML = `${stageTag}${questions ? questions.length : 0} questions`;
+      }
+      if (!questions || !questions.length) return;
+
+      questions.forEach((q) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => {
+          const input = document.getElementById('manualChatInput');
+          if (input) input.value = q.text;
+          const next = questions.filter(item => item.text !== q.text);
+          renderDashboardSuggestions(next, stage);
+          sendManualChatMessage();
+        };
+        const isOrder = q.topic === 'order_intent';
+        btn.className = `text-[10px] ${isOrder ? 'bg-emerald-950/80 hover:bg-emerald-900 border-emerald-500/50 text-emerald-300 font-bold' : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700/80'} border px-2 py-0.5 rounded-lg transition flex items-center gap-1 shadow-sm active:scale-95`;
+        btn.innerHTML = `<span>${q.icon || '💬'}</span> <span class="truncate max-w-[200px]">${q.text}</span>`;
+        btn.title = q.text;
+        container.appendChild(btn);
+      });
+    }
+
+    async function loadDashboardSuggestedQuestions(productId, lang = 'en') {
+      try {
+        const res = await fetch(`/api/products/${productId}/suggested-questions?language=${lang}`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.suggestedQuestions)) {
+          renderDashboardSuggestions(data.suggestedQuestions, data.stage);
+        }
+      } catch (e) {}
+    }
+
+    // --- SEND MANUAL CHAT (FALLBACK INPUT) ---
+    function sendManualChatMessage() {
+      const input = document.getElementById('manualChatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      if (!isCallActive) {
+        startInteractiveCall();
+        setTimeout(() => handleCustomerSpokenTurn(text), 1500);
+      } else {
+        handleCustomerSpokenTurn(text);
+      }
+    }
+
+    // --- SPEECH SYNTHESIS (Zyro AI Speaks Aloud) ---
+    function speakAiMessage(text, onFinish) {
+      if (!('speechSynthesis' in window)) {
+        if (onFinish) onFinish();
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.02;
+      utterance.pitch = 1.05;
+
+      // Pick high quality voice if available
+      const voices = window.speechSynthesis.getVoices();
+      if (window.currentDashboardLanguage === 'kn' || /[\u0C80-\u0CFF]/.test(text)) {
+        utterance.lang = 'kn-IN';
+        const knVoice = voices.find(v => v.lang.startsWith('kn') || v.lang.includes('IN'));
+        if (knVoice) utterance.voice = knVoice;
+      } else {
+        utterance.lang = 'en-US';
+        const naturalVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Zira')));
+        if (naturalVoice) utterance.voice = naturalVoice;
+      }
+
+      utterance.onstart = () => {
+        animateWaveform(true, 'Zyro AI is speaking...');
+      };
+
+      utterance.onend = () => {
+        animateWaveform(false, 'Mic ready');
+        if (onFinish) onFinish();
+      };
+
+      utterance.onerror = (e) => {
+        console.warn('Speech synthesis error:', e);
+        animateWaveform(false, 'Mic ready');
+        if (onFinish) onFinish();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // --- MICROPHONE CONTROLS ---
+    async function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (SpeechRecognition) {
+        if (!recognition) recognition = initSpeechRecognition();
+        if (recognition) {
+          try {
+            recognition.start();
+            return;
+          } catch (error) {
+            if (error && error.name !== 'InvalidStateError') {
+              console.warn('SpeechRecognition start failed:', error);
+            }
+          }
+        }
+      }
+
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        document.getElementById('speechPreviewBar').classList.remove('hidden');
+        document.getElementById('interimSpeechText').innerText = 'Audio capture unavailable. Please type below.';
+        return;
+      }
+
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recordedAudioChunks = [];
+        mediaRecorder = new MediaRecorder(mediaStream);
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) recordedAudioChunks.push(event.data);
+        };
+        mediaRecorder.onstop = transcribeRecordedAudio;
+        mediaRecorder.start();
+        isListening = true;
+        setMicUI(true);
+        document.getElementById('speechPreviewBar').classList.remove('hidden');
+        document.getElementById('interimSpeechText').innerText = 'Listening for your voice...';
+        animateWaveform(true, 'Listening to you...');
+        clearTimeout(recordingTimer);
+        recordingTimer = setTimeout(stopListening, 8000);
+      } catch (error) {
+        const message = error.name === 'NotAllowedError'
+          ? 'Microphone permission is blocked. Allow it for localhost.'
+          : 'Microphone unavailable. Check your input device.';
+        document.getElementById('speechPreviewBar').classList.remove('hidden');
+        document.getElementById('interimSpeechText').innerText = message;
+        animateWaveform(false, 'Mic needs attention');
+      }
+    }
+
+    async function transcribeRecordedAudio() {
+      const audioBlob = new Blob(recordedAudioChunks, { type: mediaRecorder?.mimeType || 'audio/webm' });
+      recordedAudioChunks = [];
+      if (!audioBlob.size) return;
+      document.getElementById('speechPreviewBar').classList.remove('hidden');
+      document.getElementById('interimSpeechText').innerText = 'Transcribing your voice...';
+      animateWaveform(true, 'Transcribing...');
+
+      try {
+        const audioBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(audioBlob);
+        });
+        const response = await fetch('/api/voice/transcribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ audio: audioBase64, mimeType: audioBlob.type || 'audio/webm' })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.transcript) throw new Error(data.error || 'No transcript returned.');
+        document.getElementById('interimSpeechText').innerText = data.transcript;
+        await handleCustomerSpokenTurn(data.transcript);
+      } catch (error) {
+        console.error('Audio transcription error:', error);
+        document.getElementById('interimSpeechText').innerText = error.message.includes('GEMINI_API_KEY')
+          ? 'Add GEMINI_API_KEY to .env to enable voice transcription.'
+          : 'Voice transcription failed. Please use the text box below.';
+        animateWaveform(false, 'Mic needs attention');
+      }
+    }
+
+    function stopListening() {
+      clearTimeout(recordingTimer);
+      const recorder = mediaRecorder;
+      if (recorder && recorder.state !== 'inactive') {
+        recorder.stop();
+      }
+      mediaRecorder = null;
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+      if (recognition && isListening) {
+        try { recognition.stop(); } catch(e) {}
+      }
+      isListening = false;
+      if (!recorder || recorder.state === 'inactive') {
+        document.getElementById('speechPreviewBar').classList.add('hidden');
+      }
+      setMicUI(false);
+    }
+
+    function toggleMicrophone() {
+      if (isListening) {
+        stopListening();
+      } else {
+        startListening();
+      }
+    }
+
+    function setMicUI(active) {
+      const btn = document.getElementById('btnMicToggle');
+      const label = document.getElementById('micBtnLabel');
+      const icon = document.getElementById('micIcon');
+      if (active) {
+        btn.className = 'bg-pink-600 text-white font-semibold text-xs py-3 px-4 rounded-xl shadow-lg shadow-pink-600/30 flex items-center gap-2 transition animate-pulse';
+        label.innerText = 'Listening...';
+        icon.className = 'fas fa-microphone';
+      } else {
+        btn.className = 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs py-3 px-4 rounded-xl border border-slate-700 flex items-center gap-2 transition';
+        label.innerText = 'Mic Off';
+        icon.className = 'fas fa-microphone-slash';
+      }
+    }
+
+    function animateWaveform(active, labelText) {
+      const bars = document.querySelectorAll('.wave-bar');
+      const waveText = document.getElementById('audioWaveText');
+      if (labelText) waveText.innerText = labelText;
+
+      bars.forEach(bar => {
+        if (active) {
+          const h = Math.floor(Math.random() * 26) + 6;
+          bar.style.height = `${h}px`;
+        } else {
+          bar.style.height = '6px';
+        }
+      });
+    }
+
+    // --- CHAT UI HELPER ---
+    function appendChatBubble(role, text, toolBadge = null) {
+      const area = document.getElementById('dialogScrollArea');
+      const isAi = role === 'ai';
+
+      const bubble = document.createElement('div');
+      bubble.className = `flex items-start gap-2 ${isAi ? '' : 'flex-row-reverse'}`;
+
+      const avatar = isAi
+        ? '<div class="w-6 h-6 rounded-full bg-pink-600/40 flex items-center justify-center text-[10px] text-pink-300 font-bold shrink-0 mt-0.5">AI</div>'
+        : '<div class="w-6 h-6 rounded-full bg-purple-600/40 flex items-center justify-center text-[10px] text-purple-300 font-bold shrink-0 mt-0.5">YOU</div>';
+
+      const toolHtml = toolBadge ? `<span class="block text-[9px] font-mono text-pink-400 font-semibold mt-1"><i class="fas fa-bolt"></i> [Tool: ${toolBadge}]</span>` : '';
+
+      bubble.innerHTML = `
+        ${avatar}
+        <div class="${isAi ? 'bg-slate-900 border border-slate-800 text-slate-200' : 'bg-pink-600 text-white font-medium'} p-2.5 rounded-2xl ${isAi ? 'rounded-tl-none' : 'rounded-tr-none'} max-w-[85%] leading-relaxed shadow-sm">
+          ${text}
+          ${toolHtml}
+        </div>
+      `;
+
+      area.appendChild(bubble);
+      area.scrollTop = area.scrollHeight;
+    }
+
+    // --- CALL TIMER ---
+    function startTimer() {
+      callTimerSeconds = 0;
+      clearInterval(callTimerInterval);
+      callTimerInterval = setInterval(() => {
+        callTimerSeconds++;
+        const mins = String(Math.floor(callTimerSeconds / 60)).padStart(2, '0');
+        const secs = String(callTimerSeconds % 60).padStart(2, '0');
+        document.getElementById('activeCallTimer').innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(callTimerInterval);
+    }
+
+    // --- END INTERACTIVE CALL & RUN GEMINI INTELLIGENCE ---
+    async function endInteractiveCall() {
+      if (!isCallActive) return;
+      isCallActive = false;
+      stopTimer();
+      stopListening();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+      document.getElementById('callStatusText').innerHTML = '<span class="text-slate-400">Call Completed • Analyzing with Gemini...</span>';
+      document.getElementById('connectionModeLabel').innerText = 'Completed';
+      document.getElementById('btnStartCall').disabled = false;
+      document.getElementById('btnStartCall').classList.remove('opacity-50');
+      document.getElementById('btnEndCall').disabled = true;
+      document.getElementById('btnMicToggle').disabled = true;
+
+      // Construct formatted transcript
+      const transcript = conversationTurns.map(t => `${t.role === 'ai' ? 'AI' : 'Customer'}: ${t.text}`).join('\n');
+      
+      const productId = document.getElementById('activeCallProduct').value;
+      const productSelect = document.getElementById('activeCallProduct');
+      const productName = productSelect.options[productSelect.selectedIndex].text;
+
+      // Trigger Gemini Post-Call Webhook
+      try {
+        const res = await fetch('/api/webhooks/post-call', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            transcript: transcript || "Customer enquired about product availability.",
+            customerName: 'Voice Caller',
+            productName,
+            productId,
+            durationSeconds: callTimerSeconds || 60,
+            callStatus: 'completed'
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && data.analysis) {
+          renderGeminiResults(data.analysis);
+          await refreshDashboard();
+        }
+      } catch (err) {
+        console.error('Error in post-call webhook:', err);
+      }
+    }
+
+    function renderGeminiResults(a) {
+      document.getElementById('geminiSummaryText').innerText = a.summary || 'Summary generated.';
+      document.getElementById('geminiIntentText').innerText = a.purchaseIntent || '-';
+      document.getElementById('geminiSentimentText').innerText = a.customerSentiment || '-';
+      document.getElementById('geminiScoreNumber').innerText = `${a.scoreNumerical || 50} / 100`;
+      document.getElementById('geminiHandoffText').innerText = a.humanHandoff ? `YES (${a.humanHandoffReason})` : 'NO';
+      document.getElementById('geminiSpecsBox').innerText = JSON.stringify(a.requestedSpecs || {}, null, 2);
+      document.getElementById('geminiActionText').innerText = a.suggestedNextStep || 'Follow up appropriately.';
+
+      const badge = document.getElementById('geminiLeadBadge');
+      badge.innerText = `${a.leadScore || 'WARM'} LEAD`;
+      if (a.leadScore === 'Hot') {
+        badge.className = 'text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse';
+      } else if (a.leadScore === 'Warm') {
+        badge.className = 'text-[10px] font-black px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30';
+      } else {
+        badge.className = 'text-[10px] font-black px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30';
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-pink-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      event.target.classList.add('bg-pink-600', 'text-white');
+      event.target.classList.remove('bg-slate-800', 'text-slate-300');
+
+      ['leads', 'products', 'calls', 'conversations', 'orders', 'followups'].forEach(t => {
+        const el = document.getElementById(`tabContent-${t}`);
+        if (el) el.classList.toggle('hidden', t !== tab);
+      });
+    }
+
+    async function refreshDashboard() {
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+
+      try {
+        const res = await fetch('/api/sheets/data');
+        const data = await res.json();
+        if (data.success && data.sheets) {
+          renderCRMData(data.sheets);
+        }
+      } catch (e) {
+        console.error('Error refreshing CRM:', e);
+      } finally {
+        if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 600);
+      }
+    }
+
+    function renderCRMData(sheets) {
+      const leads = sheets.customerLeads || [];
+      const products = sheets.products || [];
+      const calls = sheets.calls || [];
+      const convs = sheets.conversations || [];
+      const orders = sheets.salesOrders || [];
+      const followups = sheets.followups || [];
+
+      // Update Tab Counts
+      const elLeads = document.getElementById('countLeadsTab');
+      if (elLeads) elLeads.innerText = leads.length;
+      const elProducts = document.getElementById('countProductsTab');
+      if (elProducts) elProducts.innerText = products.length;
+      const elCalls = document.getElementById('countCallsTab');
+      if (elCalls) elCalls.innerText = calls.length;
+      const elConv = document.getElementById('countConvTab');
+      if (elConv) elConv.innerText = convs.length;
+      const elOrders = document.getElementById('countOrdersTab');
+      if (elOrders) elOrders.innerText = orders.length;
+      const elFollow = document.getElementById('countFollowupsTab');
+      if (elFollow) elFollow.innerText = followups.length;
+
+      // Update KPI Cards
+      const statLeads = document.getElementById('statTotalLeads');
+      if (statLeads) statLeads.innerText = leads.length;
+      const hotCount = leads.filter(l => l[11] === 'Hot').length;
+      const statHot = document.getElementById('statHotLeads');
+      if (statHot) statHot.innerText = hotCount;
+      const statCalls = document.getElementById('statCallsHandled');
+      if (statCalls) statCalls.innerText = calls.length;
+      const statOrd = document.getElementById('statOrders');
+      if (statOrd) statOrd.innerText = orders.length;
+      const statHandoff = document.getElementById('statHandoffs');
+      if (statHandoff) statHandoff.innerText = followups.filter(f => f[2] === 'URGENT').length;
+
+      // Render Leads Table
+      const leadsBody = document.getElementById('leadsTableBody');
+      if (leadsBody) {
+        leadsBody.innerHTML = leads.map(l => {
+          const isHot = l[11] === 'Hot';
+          const isCold = l[11] === 'Cold';
+          const scoreClass = isHot ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : (isCold ? 'bg-slate-800 text-slate-400' : 'bg-pink-500/20 text-pink-400 border-pink-500/30');
+          return `
+            <tr class="hover:bg-slate-900/60 transition">
+              <td class="p-2.5 font-mono text-pink-400 font-bold">${l[0]}</td>
+              <td class="p-2.5 font-semibold text-white">${l[2]}</td>
+              <td class="p-2.5 text-slate-300 font-mono">${l[3]}</td>
+              <td class="p-2.5 text-slate-300">${l[8]}</td>
+              <td class="p-2.5 text-slate-400 truncate max-w-xs" title="${l[9]}">${l[9]}</td>
+              <td class="p-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${scoreClass}">
+                  ${isHot ? '🔥 ' : ''}${l[11]}
+                </span>
+              </td>
+              <td class="p-2.5 text-slate-300">${l[10]}</td>
+              <td class="p-2.5">
+                <button onclick="startInteractiveCallWithLead('${l[0]}', '${l[2]}', '${l[8]}', '${l[7]}')" class="bg-pink-600/30 hover:bg-pink-600 text-pink-300 hover:text-white px-2 py-1 rounded text-[11px] font-semibold transition">
+                  <i class="fas fa-headset"></i> Call Live
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('') || '<tr><td colspan="8" class="p-4 text-center text-slate-500">No leads registered yet.</td></tr>';
+      }
+
+      // Render Products Table
+      const productsBody = document.getElementById('productsTableBody');
+      if (productsBody) {
+        productsBody.innerHTML = products.map(p => `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5 font-mono text-pink-400">${p[0]}</td>
+            <td class="p-2.5 font-semibold text-white">${p[1]}</td>
+            <td class="p-2.5 capitalize text-slate-400">${p[2]}</td>
+            <td class="p-2.5 font-bold text-emerald-400">₹${Number(p[6]).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 font-mono">${p[9]} units</td>
+            <td class="p-2.5 text-emerald-400">${p[13]}</td>
+            <td class="p-2.5 text-slate-400">${p[10]}</td>
+            <td class="p-2.5 text-slate-400">${p[11]}</td>
+            <td class="p-2.5">
+              <a href="https://www.instagram.com/reel/post_${p[0]}/" target="_blank" class="px-2 py-0.5 rounded bg-pink-600/20 hover:bg-pink-600 text-pink-300 hover:text-white transition inline-flex items-center gap-1 text-[10px] font-semibold">
+                <i class="fab fa-instagram"></i> Reel Post
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Calls Table
+      const callsBody = document.getElementById('callsTableBody');
+      if (callsBody) {
+        callsBody.innerHTML = calls.map(c => `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5 font-mono text-purple-400">${c[0]}</td>
+            <td class="p-2.5 font-mono text-pink-400">${c[1]}</td>
+            <td class="p-2.5 font-mono text-slate-400">${c[3]}</td>
+            <td class="p-2.5 text-slate-400">${new Date(c[4]).toLocaleTimeString()}</td>
+            <td class="p-2.5 font-mono">${c[6]}s</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">${c[7]}</span></td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="p-4 text-center text-slate-500">No calls recorded.</td></tr>';
+      }
+
+      // Render Conversations Table
+      const convBody = document.getElementById('convTableBody');
+      if (convBody) {
+        convBody.innerHTML = convs.map(cv => `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5 font-mono text-pink-400">${cv[0]}</td>
+            <td class="p-2.5 text-slate-300 max-w-sm truncate" title="${cv[2]}">${cv[2]}</td>
+            <td class="p-2.5 font-bold text-pink-400">${cv[4]}</td>
+            <td class="p-2.5 text-emerald-400">${cv[5]}</td>
+            <td class="p-2.5 font-mono text-slate-400 max-w-xs truncate">${cv[6]}</td>
+            <td class="p-2.5 font-bold ${cv[8] === 'YES' ? 'text-rose-400' : 'text-slate-500'}">${cv[8]}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="p-4 text-center text-slate-500">No conversation intelligence logged yet.</td></tr>';
+      }
+
+      // Render Orders Table
+      const ordersBody = document.getElementById('ordersTableBody');
+      if (ordersBody) {
+        ordersBody.innerHTML = orders.map(o => `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5 font-mono text-emerald-400 font-bold">${o[0]}</td>
+            <td class="p-2.5 font-mono text-pink-400">${o[1]}</td>
+            <td class="p-2.5 font-semibold text-white">${o[3]}</td>
+            <td class="p-2.5 font-mono">${o[4]}</td>
+            <td class="p-2.5 text-slate-300">${o[6]}, Size ${o[5]}</td>
+            <td class="p-2.5 font-extrabold text-emerald-400">₹${Number(o[7]).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-slate-400">${o[8]}</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">${o[9]}</span></td>
+          </tr>
+        `).join('') || '<tr><td colspan="8" class="p-4 text-center text-slate-500">No orders placed yet.</td></tr>';
+      }
+
+      // Render Followups Table
+      const followupsBody = document.getElementById('followupsTableBody');
+      if (followupsBody) {
+        followupsBody.innerHTML = followups.map(f => `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="p-2.5 font-mono text-rose-400 font-bold">${f[0]}</td>
+            <td class="p-2.5 font-mono text-pink-400">${f[1]}</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-[10px] font-bold">${f[2]}</span></td>
+            <td class="p-2.5 text-slate-300">${f[3]}</td>
+            <td class="p-2.5 text-slate-400">${f[4]}</td>
+            <td class="p-2.5 text-amber-400 font-semibold">${f[5]}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="6" class="p-4 text-center text-slate-500">No follow-ups pending.</td></tr>';
+      }
+    }
+
+    function startInteractiveCallWithLead(leadId, customerName, productName, productId) {
+      if (productId && productId !== 'N/A') {
+        document.getElementById('activeCallProduct').value = productId;
+      }
+      startInteractiveCall({ customerName, productName });
+      window.scrollTo({ top: 150, behavior: 'smooth' });
+    }
+
+    function downloadActiveCSV() {
+      window.open(`/data/sheets_exports/${currentTab}.csv`, '_blank');
+    }
+
+    // --- TWILIO MOBILE CALLING & CONFIGURATION FUNCTIONS ---
+    function onLanguageModeChange() {
+      const mode = document.getElementById('activeLanguageMode').value;
+      if (mode === 'kn') {
+        window.currentDashboardLanguage = 'kn';
+        if (recognition) recognition.lang = 'kn-IN';
+      } else if (mode === 'kn_roman') {
+        window.currentDashboardLanguage = 'kn_roman';
+        if (recognition) recognition.lang = 'en-IN';
+      } else if (mode === 'kn_recognize_en_speak') {
+        window.currentDashboardLanguage = 'kn';
+        if (recognition) recognition.lang = 'kn-IN';
+      } else if (mode === 'en') {
+        window.currentDashboardLanguage = 'en';
+        if (recognition) recognition.lang = 'en-US';
+      } else {
+        // Auto Bilingual Mode: Kannada input -> Kannada speech, English input -> English speech
+        window.currentDashboardLanguage = 'auto';
+        if (recognition) recognition.lang = 'kn-IN';
+      }
+    }
+
+    // --- BOLNA AI CALLING & CONFIGURATION FUNCTIONS ---
+    async function loadBolnaConfig() {
+      try {
+        const res = await fetch('/api/settings/bolna');
+        const data = await res.json();
+        const badge = document.getElementById('dashBolnaBadge');
+        const btnLabel = document.getElementById('dashBolnaBtnLabel');
+        const modalStatus = document.getElementById('bolnaStatusText');
+
+        if (data.configured) {
+          if (badge) {
+            badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+            badge.innerHTML = `<i class="fas fa-check-circle"></i> Bolna Live`;
+          }
+          if (btnLabel) btnLabel.innerText = `Bolna (${data.agentId ? data.agentId.slice(0, 8) + '...' : 'Ready'})`;
+          if (modalStatus) {
+            modalStatus.className = 'font-bold text-emerald-400 flex items-center gap-1';
+            modalStatus.innerHTML = `<i class="fas fa-circle-check"></i> Connected & Ready (Agent: ${data.agentId ? data.agentId.slice(0, 8) + '...' : 'OK'})`;
+          }
+        } else {
+          if (badge) {
+            badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40';
+            badge.innerHTML = `<i class="fas fa-circle-exclamation"></i> Bolna Setup Needed`;
+          }
+          if (btnLabel) btnLabel.innerText = 'Configure Bolna Agent';
+          if (modalStatus) {
+            modalStatus.className = 'font-bold text-amber-400 flex items-center gap-1';
+            modalStatus.innerHTML = `<i class="fas fa-circle-exclamation"></i> API Key & Agent ID Needed`;
+          }
+        }
+
+        if (data.fromNumber && document.getElementById('bolnaFromNumber')) {
+          document.getElementById('bolnaFromNumber').value = data.fromNumber;
+        }
+        if (data.agentId && document.getElementById('bolnaAgentId') && !document.getElementById('bolnaAgentId').value) {
+          document.getElementById('bolnaAgentId').value = data.agentId;
+        }
+      } catch (err) {
+        console.warn('Could not load Bolna config:', err);
+      }
+    }
+
+    // Backwards compatibility alias
+    window.loadTwilioConfig = loadBolnaConfig;
+    window.openTwilioConfigModal = openBolnaConfigModal;
+
+    function openBolnaConfigModal() {
+      document.getElementById('bolnaConfigModal').classList.remove('hidden');
+      loadBolnaConfig();
+    }
+
+    function closeBolnaConfigModal() {
+      document.getElementById('bolnaConfigModal').classList.add('hidden');
+    }
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById('bolnaApiKey');
+      const eye = document.getElementById('toggleApiKeyEye');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.className = 'fas fa-eye-slash';
+      } else {
+        input.type = 'password';
+        eye.className = 'fas fa-eye';
+      }
+    }
+
+    async function saveBolnaConfig(e) {
+      if (e) e.preventDefault();
+      const saveBtn = document.getElementById('saveBolnaBtn');
+      const statusText = document.getElementById('bolnaStatusText');
+      const apiKey = document.getElementById('bolnaApiKey').value.trim();
+      const agentId = document.getElementById('bolnaAgentId').value.trim();
+      const fromPhoneNumber = document.getElementById('bolnaFromNumber').value.trim();
+      const defaultCountryCode = document.getElementById('bolnaCountryCode')?.value || '+91';
+
+      if (!apiKey || apiKey.length < 16) {
+        alert('Please enter a valid Bolna API Key (found on https://www.bolna.ai under API Keys).');
+        return;
+      }
+      if (!agentId || agentId.length < 10) {
+        alert('Please enter your Bolna Agent ID (UUID of your conversational agent in Bolna Studio).');
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying with Bolna API...';
+      if (statusText) statusText.innerText = 'Validating credentials with Bolna AI...';
+
+      try {
+        const res = await fetch('/api/settings/bolna', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey, agentId, fromPhoneNumber, defaultCountryCode })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Bolna AI credentials successfully saved and verified!');
+          closeBolnaConfigModal();
+          loadBolnaConfig();
+        } else {
+          alert('Bolna Error: ' + (data.error || 'Failed to authenticate credentials'));
+        }
+      } catch (err) {
+        alert('Network error connecting to Bolna: ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-check-circle"></i> Save & Verify Bolna Credentials';
+      }
+    }
+
+    async function pollBolnaCallStatus(executionId) {
+      if (!executionId) return;
+      try {
+        const res = await fetch(`/api/calls/${executionId}/status`);
+        const data = await res.json();
+        const statusEl = document.getElementById(`execStatus-${executionId}`);
+        if (statusEl) {
+          statusEl.innerHTML = `<span class="font-bold text-emerald-400">${data.status}</span> (Duration: ${data.duration || 0}s)`;
+        }
+      } catch (e) {
+        console.warn('Could not poll Bolna status:', e.message);
+      }
+    }
+
+    async function triggerDirectMobileCall() {
+      const countryCode = document.getElementById('directCallCountryCode').value;
+      const rawNumber = document.getElementById('directCallPhoneNumber').value.trim();
+      const customerName = document.getElementById('directCallCustomerName').value.trim() || 'Valued Customer';
+      const productName = document.getElementById('directCallProductSelect').value;
+      const language = document.getElementById('directCallLanguageSelect').value;
+      const enquiry = document.getElementById('directCallEnquiry').value.trim();
+      const consentCheckbox = document.getElementById('directCallConsentCheckbox');
+      const statusBox = document.getElementById('directCallStatusBox');
+      const btn = document.getElementById('btnTriggerMobileCall');
+
+      if (!rawNumber) {
+        alert('Please enter an Indian mobile phone number to call (e.g. 9876543210).');
+        document.getElementById('directCallPhoneNumber').focus();
+        return;
+      }
+
+      if (consentCheckbox && !consentCheckbox.checked) {
+        alert('TRAI Compliance Notice: Explicit customer consent is required before placing automated calls to Indian numbers. Please check the consent box.');
+        return;
+      }
+
+      // Format E.164 number
+      const fullNumber = rawNumber.startsWith('+') ? rawNumber : `${countryCode}${rawNumber.replace(/^0+/, '')}`;
+
+      // Validate Indian mobile numbers (+91 followed by 10 digits starting with 6,7,8,9)
+      if (countryCode === '+91' || fullNumber.startsWith('+91')) {
+        const cleanDigits = fullNumber.replace('+91', '');
+        if (!/^[6-9]\d{9}$/.test(cleanDigits)) {
+          alert(`Invalid Indian Mobile Number: "${rawNumber}". A valid Indian mobile number must have 10 digits starting with 6, 7, 8, or 9.`);
+          document.getElementById('directCallPhoneNumber').focus();
+          return;
+        }
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calling Indian Mobile...';
+      statusBox.classList.remove('hidden');
+      statusBox.className = 'mt-3.5 p-3.5 rounded-xl border border-purple-500/40 bg-purple-950/40 text-xs flex items-center justify-between';
+      statusBox.innerHTML = `
+        <div class="flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-purple-400 animate-ping"></span>
+          <div>
+            <p class="font-bold text-white"><i class="fas fa-phone-alt"></i> Dialing ${fullNumber} via Bolna AI...</p>
+            <p class="text-[11px] text-slate-300">Connecting via Bolna Voice Telephony (${language.toUpperCase()} voice). Checking cellular network...</p>
+          </div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/calls/trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: fullNumber,
+            customerName,
+            productName,
+            initialEnquiry: enquiry,
+            language,
+            consent: true
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const execId = data.executionId || data.callSid || 'SIM_CALL';
+          statusBox.className = 'mt-3.5 p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-950/40 text-xs flex items-center justify-between';
+          statusBox.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              <div>
+                <p class="font-bold text-emerald-300"><i class="fas fa-phone-volume"></i> Bolna Call Queued: <span id="execStatus-${execId}">${data.status || 'initiated'}</span></p>
+                <p class="text-[11px] text-slate-300">Recipient: <strong>${data.recipientPhone || fullNumber}</strong> | Language: <span class="text-purple-300 uppercase font-bold">${data.language || language}</span> | Execution ID: <span class="font-mono text-purple-300">${execId}</span></p>
+                <p class="text-[11px] text-emerald-400 mt-0.5">${data.message || 'Phone call active on cellular network!'}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="pollBolnaCallStatus('${execId}')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-purple-300 border border-purple-500/30 flex items-center gap-1 cursor-pointer">
+                <i class="fas fa-sync-alt"></i> Poll Status
+              </button>
+              <button onclick="document.getElementById('directCallStatusBox').classList.add('hidden')" class="text-slate-400 hover:text-white text-xs px-2 py-1"><i class="fas fa-times"></i></button>
+            </div>
+          `;
+          refreshDashboard();
+        } else {
+          statusBox.className = 'mt-3.5 p-3.5 rounded-xl border border-rose-500/40 bg-rose-950/40 text-xs flex items-center justify-between';
+          statusBox.innerHTML = `
+            <div>
+              <p class="font-bold text-rose-300"><i class="fas fa-circle-exclamation"></i> Call Failed</p>
+              <p class="text-[11px] text-slate-300">${data.error || 'Failed to place Bolna call. Please check credentials or number.'}</p>
+            </div>
+            <button onclick="openBolnaConfigModal()" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-[11px]">Configure Bolna</button>
+          `;
+        }
+      } catch (err) {
+        statusBox.className = 'mt-3.5 p-3.5 rounded-xl border border-rose-500/40 bg-rose-950/40 text-xs flex items-center justify-between';
+        statusBox.innerHTML = `
+          <div>
+            <p class="font-bold text-rose-300"><i class="fas fa-circle-exclamation"></i> Request Error</p>
+            <p class="text-[11px] text-slate-300">${err.message}</p>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-phone-volume"></i> <span>Call Indian Mobile via Bolna AI</span>';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshDashboard();
+      loadBolnaConfig();
+
+      // Setup live visualizer for active product dropdown
+      const prodSelect = document.getElementById('activeCallProduct');
+      if (prodSelect) {
+        prodSelect.addEventListener('change', (e) => {
+          fetch(`/api/products/${e.target.value}`).then(r => r.json()).then(d => {
+            if (d.success && d.product) updateDashboardProductVisualizer(d.product);
+          }).catch(() => {});
+        });
+        // Initial visualizer population
+        fetch(`/api/products/${prodSelect.value}`).then(r => r.json()).then(d => {
+          if (d.success && d.product) updateDashboardProductVisualizer(d.product);
+        }).catch(() => {});
+      }
+
+      // Check URL params for auto-test
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('autoTest') === 'true') {
+        setTimeout(() => startInteractiveCall(), 800);
+      }
+    });
+  </script>
+
+  <!-- BOLNA AI CONFIGURATION & AGENT SETUP MODAL -->
+  <div id="bolnaConfigModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl my-8">
+      
+      <!-- MODAL HEADER -->
+      <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center text-base">
+            <i class="fas fa-headset"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+              Bolna AI Voice Agent Setup (India +91)
+            </h3>
+            <p class="text-[11px] text-slate-400">Configure Bolna Agent ID & API credentials for cellular calls</p>
+          </div>
+        </div>
+        <button onclick="closeBolnaConfigModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs transition">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- MODAL BODY -->
+      <form id="bolnaConfigForm" onsubmit="saveBolnaConfig(event)" class="p-4 sm:p-5 space-y-3.5 text-xs">
+        
+        <!-- STATUS BADGE -->
+        <div id="bolnaStatusBanner" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-400">Current Status:</span>
+          <span id="bolnaStatusText" class="font-bold text-amber-400 flex items-center gap-1">
+            <i class="fas fa-circle-exclamation"></i> Checking Bolna status...
+          </span>
+        </div>
+
+        <!-- AGENT ID -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">
+            Bolna Agent ID (UUID) <span class="text-rose-400">*</span>
+          </label>
+          <input type="text" id="bolnaAgentId" required placeholder="e.g. 123e4567-e89b-12d3-a456-426655440000" 
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-purple-500">
+          <p class="text-[10px] text-slate-500 mt-0.5">Found on your Bolna Studio dashboard under Agent Settings</p>
+        </div>
+
+        <!-- API KEY -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">
+            Bolna API Key <span class="text-rose-400">*</span>
+          </label>
+          <div class="relative">
+            <input type="password" id="bolnaApiKey" required placeholder="Your Bolna API Key (Bearer token)" 
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-purple-500">
+            <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-2.5 text-slate-500 hover:text-slate-300 text-xs">
+              <i class="fas fa-eye" id="toggleApiKeyEye"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-0.5">Generated in Bolna Studio -> API Keys</p>
+        </div>
+
+        <!-- CALLER NUMBER & COUNTRY -->
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">
+              Caller ID / Virtual Number (Optional)
+            </label>
+            <input type="text" id="bolnaFromNumber" placeholder="+9180XXXXXXXX" 
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-purple-500">
+            <p class="text-[10px] text-slate-500 mt-0.5">Leave blank to use Bolna's default registered number</p>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1">
+              Default Country
+            </label>
+            <select id="bolnaCountryCode" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+              <option value="+91" selected>🇮🇳 +91 (IN)</option>
+              <option value="+1">🇺🇸 +1 (US)</option>
+              <option value="+44">🇬🇧 +44 (UK)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <button type="submit" id="saveBolnaBtn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <i class="fas fa-check-circle" id="saveBolnaIcon"></i> <span id="saveBolnaText">Save & Verify Bolna Credentials</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+{
+  "agent_name": "Zyro AI - TrendVibe AI Shopping Assistant",
+  "conversation_config": {
+    "agent": {
+      "prompt": {
+        "prompt": "You are Zyro AI, the friendly, highly knowledgeable, and professional AI Shopping Sales Assistant for 'TrendVibe Store'.\n\nYOUR IDENTITY AND ROLE:\n- Always clearly identify yourself as the store's AI Shopping Assistant. Never pretend to be a human.\n- You are calling the customer back because they tapped 'Enquire Now' or 'Talk to AI' on an Instagram video/post featuring a product.\n- Your goal is to answer their product questions accurately, guide them towards placing an order, address concerns politely, and provide world-class customer service.\n\nCRITICAL KNOWLEDGE AND FACTUAL ACCURACY RULES:\n1. NEVER INVENT, GUESS, OR HALLUCINATE product prices, stock counts, discounts, sizes, colours, delivery dates, or store policies.\n2. You have real-time access to the store's inventory and catalog through backend tool functions. ALWAYS call the corresponding function before answering questions about price, stock, size, colour, specifications, delivery, or return policies.\n3. If a requested size, colour, or item is sold out, inform the caller honestly and immediately call `searchSimilarProducts` to recommend available alternatives.\n4. If a customer asks a question you do not have information for, or if they explicitly ask to speak with a person, politely inform them and invoke human handoff (`human_handoff`).\n\nCATEGORY-SPECIFIC ATTRIBUTES:\n- Clothing: Check sizes (S, M, L, XL, XXL), colours, fabric (e.g. 240 GSM French Terry Cotton), wash care, and fit.\n- Mobile Phones: Check RAM (e.g. 12GB/16GB), storage (256GB/512GB/1TB), processor (Snapdragon 8 Gen 3), camera MP, battery (5400mAh), and warranty.\n- Laptops: Check CPU (Intel Core Ultra / AMD Ryzen), GPU, RAM, SSD storage, display (OLED 120Hz), battery life, and warranty.\n- Shoes: Check UK/US sizes (7 to 11), sole material, carbon plate, cushioning, and fit.\n- Cosmetics: Check skin types, active ingredients (Vitamin C, Hyaluronic Acid), cruelty-free certifications, and shelf life.\n- Accessories: Check capacity (Litres), water-resistance, materials, and warranty.\n\nSPEAKING STYLE:\n- Natural, enthusiastic, concise, and conversational. Keep responses to 1-3 spoken sentences per turn. Avoid long bulleted speeches that overwhelm on telephone audio.\n- Use warm shopping greetings and clear English.\n- If the customer shows strong buying intent (e.g., 'I want to buy this', 'Can I order now?', 'I want 2 pieces', 'Can I do Cash on Delivery?'), enthusiastically guide them to confirm their details and call `createOrder`.",
+        "tools": [
+          {
+            "type": "webhook",
+            "name": "searchProduct",
+            "description": "Searches store catalog for products by keyword, brand, category, or name.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/searchProduct",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "query": { "type": "string", "description": "Search keyword or product name" },
+                "category": { "type": "string", "description": "Optional category filter" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getProductDetails",
+            "description": "Retrieves comprehensive specifications, pricing, stock, and policies for a product.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getProductDetails",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID if known" },
+                "query": { "type": "string", "description": "Product name or keyword" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "checkStock",
+            "description": "Checks exact real-time inventory count and stock status, optionally filtered by size and colour.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/checkStock",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" },
+                "size": { "type": "string", "description": "Size to check (e.g. XL, 32, UK 9)" },
+                "colour": { "type": "string", "description": "Colour to check (e.g. Vintage Black)" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getPrice",
+            "description": "Retrieves official price, discount percentage, sale price, and free delivery thresholds.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getPrice",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getVariants",
+            "description": "Returns all available sizes, colours, and hardware configurations.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getVariants",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "checkSize",
+            "description": "Validates if a specific size is available in stock.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/checkSize",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" },
+                "size": { "type": "string", "description": "Size requested" }
+              },
+              "required": ["size"]
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "checkColour",
+            "description": "Validates if a specific colour is available in stock.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/checkColour",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" },
+                "colour": { "type": "string", "description": "Colour requested" }
+              },
+              "required": ["colour"]
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getDeliveryInformation",
+            "description": "Retrieves estimated delivery timeline, shipping charges, and free shipping conditions.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getDeliveryInformation",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" },
+                "pincode": { "type": "string", "description": "Customer zip code or area" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getReturnPolicy",
+            "description": "Fetches return window, exchange policy, and refund processing details.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getReturnPolicy",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getPaymentOptions",
+            "description": "Checks accepted payment options and Cash on Delivery (COD) availability.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getPaymentOptions",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Product ID" },
+                "query": { "type": "string", "description": "Product name" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "searchSimilarProducts",
+            "description": "Finds in-stock alternative or similar products when requested item or size is sold out.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/searchSimilarProducts",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "description": "Current product ID" },
+                "category": { "type": "string", "description": "Product category" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "getOrderStatus",
+            "description": "Checks tracking status and delivery updates of existing orders.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/getOrderStatus",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "orderId": { "type": "string", "description": "Order ID if available" },
+                "phone": { "type": "string", "description": "Customer phone number" }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "createOrder",
+            "description": "Places a confirmed verbal customer order during the call.",
+            "url": "{{SERVER_BASE_URL}}/api/tools/createOrder",
+            "method": "POST",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "leadId": { "type": "string", "description": "Lead ID" },
+                "productId": { "type": "string", "description": "Product ID" },
+                "size": { "type": "string", "description": "Selected size" },
+                "colour": { "type": "string", "description": "Selected colour" },
+                "quantity": { "type": "integer", "description": "Quantity requested" },
+                "paymentMethod": { "type": "string", "description": "e.g. Cash on Delivery (COD)" },
+                "shippingAddress": { "type": "string", "description": "Customer shipping address" }
+              },
+              "required": ["productId"]
+            }
+          }
+        ]
+      },
+      "first_message": "Namaste {{customer_name}}! I'm Zyro AI from TrendVibe Store sellers. I saw your enquiry about the {{product_name}}. How can I help you?"
+    },
+    "tts": {
+      "voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "model_id": "eleven_turbo_v2_5",
+      "agent_output_audio_format": "pcm_16000",
+      "optimize_streaming_latency": 4
+    }
+  }
+}

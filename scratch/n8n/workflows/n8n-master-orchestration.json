@@ -1,0 +1,240 @@
+{
+  "name": "TrendVibe - Social Media AI Shopping Sales Voice Agent (Master)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-lead-intake",
+      "name": "1. Instagram Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sanitize and Validate Lead Data\nconst body = $input.first().json.body || $input.first().json;\n\nconst customerName = (body.customerName || '').trim();\nlet phone = (body.phone || '').trim().replace(/[\\s\\-\\(\\)]/g, '');\n\nif (!customerName) {\n  throw new Error('Customer Name is required');\n}\n\nif (!phone || phone.length < 8) {\n  throw new Error('Valid Phone Number is required');\n}\n\n// Format E.164\nif (!phone.startsWith('+')) {\n  phone = '+' + (phone.length === 10 ? '1' + phone : phone);\n}\n\nreturn [{\n  json: {\n    leadId: 'LEAD-' + Date.now().toString().slice(-6),\n    createdAt: new Date().toISOString(),\n    customerName,\n    phone,\n    email: body.email || '',\n    socialMediaSource: body.socialMediaSource || 'instagram',\n    campaign: body.campaign || 'reels_organic',\n    productId: body.productId || 'PROD-CLOTH-001',\n    productName: body.productName || 'Featured Collection Item',\n    initialEnquiry: body.initialEnquiry || 'Interested from Instagram Reel',\n    leadStatus: 'New Lead',\n    leadScore: 'Warm'\n  }\n}];"
+      },
+      "id": "node-validate-lead",
+      "name": "2. Validate & Sanitize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "={{ $env.GOOGLE_SHEET_ID || 'TRENDVIBE_STORE_LEADS' }}",
+        "range": "Customer Leads!A:L",
+        "options": {}
+      },
+      "id": "node-sheets-append-lead",
+      "name": "3. Save to Google Sheets (Leads)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SERVER_BASE_URL || 'http://localhost:3000' }}/api/calls/trigger",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "leadId", "value": "={{ $('2. Validate & Sanitize').first().json.leadId }}" },
+            { "name": "customerName", "value": "={{ $('2. Validate & Sanitize').first().json.customerName }}" },
+            { "name": "phone", "value": "={{ $('2. Validate & Sanitize').first().json.phone }}" },
+            { "name": "productName", "value": "={{ $('2. Validate & Sanitize').first().json.productName }}" },
+            { "name": "initialEnquiry", "value": "={{ $('2. Validate & Sanitize').first().json.initialEnquiry }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-trigger-ai-call",
+      "name": "4. Trigger ElevenLabs + Twilio Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Lead registered! AI Shopping Voice Agent is calling the customer.\",\n  \"leadId\": \"{{ $('2. Validate & Sanitize').first().json.leadId }}\"\n}",
+        "options": {}
+      },
+      "id": "node-respond-frontend",
+      "name": "5. Respond to Mobile Page",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "post-call",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-post-call",
+      "name": "6. Post-Call Transcript Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 580]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"role\": \"user\",\n    \"parts\": [{\n      \"text\": \"Analyze this customer shopping phone call transcript and output strict JSON with fields: customerName, phoneNumber, productName, customerQuestions (array), requestedSpecs (object), enquiryCategories (object with priceEnquiry, availabilityEnquiry, deliveryEnquiry, returnEnquiry, codEnquiry), purchaseIntent (STRONG_BUY|INTERESTED_EXPLORING|PRICE_SENSITIVE|JUST_BROWSING|NOT_INTERESTED), customerSentiment (VERY_POSITIVE|POSITIVE|NEUTRAL|HESITANT|NEGATIVE), summary, unresolvedQuestions (array), humanHandoff (boolean), humanHandoffReason (string), orderPlaced (boolean).\\n\\nTranscript:\\n\" + JSON.stringify($input.first().json.transcript || '')\n    }]\n  }]\n}",
+        "options": {}
+      },
+      "id": "node-gemini-analysis",
+      "name": "7. Gemini Transcript Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 580]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Gemini Output & Compute Lead Score\nconst response = $input.first().json;\nlet rawText = '';\ntry {\n  rawText = response.candidates[0].content.parts[0].text;\n} catch(e) {\n  rawText = '{}';\n}\n\nconst cleaned = rawText.replace(/^```json\\s*/i, '').replace(/\\s*```$/i, '').trim();\nlet parsed = {};\ntry {\n  parsed = JSON.parse(cleaned);\n} catch(e) {\n  parsed = { purchaseIntent: 'INTERESTED_EXPLORING', customerSentiment: 'POSITIVE', summary: 'Call completed' };\n}\n\n// Compute Numerical Score\nlet score = 50;\nif (parsed.purchaseIntent === 'STRONG_BUY' || parsed.orderPlaced) score += 40;\nelse if (parsed.purchaseIntent === 'INTERESTED_EXPLORING') score += 15;\nelse if (parsed.purchaseIntent === 'PRICE_SENSITIVE') score += 5;\nelse if (parsed.purchaseIntent === 'NOT_INTERESTED') score -= 30;\n\nif (parsed.customerSentiment === 'VERY_POSITIVE') score += 15;\nelse if (parsed.customerSentiment === 'NEGATIVE') score -= 20;\n\nscore = Math.max(10, Math.min(100, score));\n\nlet leadScore = 'Warm';\nif (score >= 80) leadScore = 'Hot';\nelse if (score < 40) leadScore = 'Cold';\n\nreturn [{\n  json: {\n    ...parsed,\n    leadScore,\n    scoreNumerical: score,\n    conversationId: $('6. Post-Call Transcript Webhook').first().json.conversationId || 'CONV-' + Date.now(),\n    leadId: $('6. Post-Call Transcript Webhook').first().json.leadId || 'N/A'\n  }\n}];"
+      },
+      "id": "node-parse-lead-score",
+      "name": "8. Parse & Score Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 580]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "={{ $env.GOOGLE_SHEET_ID || 'TRENDVIBE_STORE_LEADS' }}",
+        "range": "Conversations!A:J",
+        "options": {}
+      },
+      "id": "node-sheets-append-conv",
+      "name": "9. Update Google Sheets (Conversations)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [880, 580]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $input.first().json.humanHandoff || $input.first().json.leadScore === 'Hot' }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "node-check-handoff",
+      "name": "10. Hot Lead or Human Handoff?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1100, 580]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "={{ $env.GOOGLE_SHEET_ID || 'TRENDVIBE_STORE_LEADS' }}",
+        "range": "Follow-ups!A:H",
+        "options": {}
+      },
+      "id": "node-followup-urgent",
+      "name": "11. Log Urgent Follow-up Alert",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1340, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"status\": \"TRANSCRIPT_PROCESSED\",\n  \"leadScore\": \"{{ $('8. Parse & Score Lead').first().json.leadScore }}\",\n  \"scoreNumerical\": {{ $('8. Parse & Score Lead').first().json.scoreNumerical }}\n}",
+        "options": {}
+      },
+      "id": "node-respond-postcall",
+      "name": "12. Respond to Post-Call Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1340, 680]
+    }
+  ],
+  "connections": {
+    "1. Instagram Lead Webhook": {
+      "main": [
+        [
+          { "node": "2. Validate & Sanitize", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "2. Validate & Sanitize": {
+      "main": [
+        [
+          { "node": "3. Save to Google Sheets (Leads)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "3. Save to Google Sheets (Leads)": {
+      "main": [
+        [
+          { "node": "4. Trigger ElevenLabs + Twilio Call", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "4. Trigger ElevenLabs + Twilio Call": {
+      "main": [
+        [
+          { "node": "5. Respond to Mobile Page", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "6. Post-Call Transcript Webhook": {
+      "main": [
+        [
+          { "node": "7. Gemini Transcript Analysis", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "7. Gemini Transcript Analysis": {
+      "main": [
+        [
+          { "node": "8. Parse & Score Lead", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "8. Parse & Score Lead": {
+      "main": [
+        [
+          { "node": "9. Update Google Sheets (Conversations)", "type": "main", "index": 0 },
+          { "node": "10. Hot Lead or Human Handoff?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "10. Hot Lead or Human Handoff?": {
+      "main": [
+        [
+          { "node": "11. Log Urgent Follow-up Alert", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "12. Respond to Post-Call Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "11. Log Urgent Follow-up Alert": {
+      "main": [
+        [
+          { "node": "12. Respond to Post-Call Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

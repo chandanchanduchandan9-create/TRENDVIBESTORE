@@ -1,0 +1,27 @@
+{
+  "name": "instaproject",
+  "version": "1.0.0",
+  "description": "TrendVibe AI Social Media Shopping Sales Voice Agent",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/verify-system.js",
+    "test:routing": "node tests/verify-tool-routing-fixes.js",
+    "test:knowledge": "node tests/verify-automatic-knowledge-retrieval.js",
+    "test:suggestions": "node tests/test-dynamic-suggested-questions.js",
+    "verify:dbms": "node tests/verify-dbms-and-product.js"
+  },
+  "dependencies": {
+    "@google/genai": "^0.1.2",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.12.0",
+    "uuid": "^11.0.5",
+    "ws": "^8.18.0"
+  }
+}

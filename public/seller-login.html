@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Login • TrendVibe Store Central</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .insta-gradient {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
+  <!-- TOP BRANDING HEADER -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur px-6 py-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <a href="/index.html" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-xl insta-gradient flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-pink-500/20 group-hover:scale-105 transition">
+          <i class="fab fa-instagram"></i>
+        </div>
+        <div>
+          <span class="text-base font-extrabold bg-gradient-to-r from-pink-400 via-rose-400 to-amber-300 bg-clip-text text-transparent">TrendVibe Store</span>
+          <span class="block text-[10px] text-slate-400 font-medium">Merchant & Seller Portal</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="/index.html" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1.5">
+          <i class="fas fa-store"></i> <span class="hidden sm:inline">Storefront</span>
+        </a>
+        <a href="/dashboard.html" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1.5">
+          <i class="fas fa-headset text-purple-400"></i> <span class="hidden sm:inline">Voice Console</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LOGIN CARD -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 my-8">
+    <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden backdrop-blur">
+      
+      <!-- GLOW ORBS -->
+      <div class="absolute -top-20 -right-20 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- HEADER & BADGE -->
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-600 to-amber-500 text-white shadow-xl shadow-pink-500/20 mb-3 text-2xl">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">Seller Central Login</h1>
+        <p class="text-xs text-slate-400 mt-1">Manage Store Inventory, Track Customer Queries & Orders</p>
+      </div>
+
+      <!-- ERROR ALERT (HIDDEN BY DEFAULT) -->
+      <div id="loginError" class="hidden mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+        <i class="fas fa-circle-exclamation shrink-0"></i>
+        <span id="loginErrorMsg">Invalid credentials.</span>
+      </div>
+
+      <!-- SUCCESS ALERT (HIDDEN BY DEFAULT) -->
+      <div id="loginSuccess" class="hidden mb-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+        <i class="fas fa-circle-check shrink-0"></i>
+        <span>Login verified! Redirecting to Seller Central...</span>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="sellerLoginForm" onsubmit="handleSellerLogin(event)" class="space-y-4">
+        
+        <!-- EMAIL -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1.5" for="sellerEmail">
+            Seller Work Email
+          </label>
+          <div class="relative">
+            <i class="fas fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+            <input 
+              type="email" 
+              id="sellerEmail" 
+              required 
+              placeholder="seller@trendvibe.in" 
+              value="seller@trendvibe.in"
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-3.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-300" for="sellerPassword">
+              Portal Password
+            </label>
+            <span class="text-[10px] text-pink-400 hover:underline cursor-pointer" onclick="fillDemoCredentials()">Use demo pass</span>
+          </div>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+            <input 
+              type="password" 
+              id="sellerPassword" 
+              required 
+              placeholder="••••••••••••" 
+              value="trendvibe2026"
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility()" 
+              class="absolute right-3.5 top-3 text-slate-500 hover:text-slate-300 text-xs">
+              <i class="fas fa-eye" id="pwdToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- REMEMBER ME & STATUS -->
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="rememberMe" checked class="rounded bg-slate-950 border-slate-800 text-pink-600 focus:ring-pink-500">
+            <span>Keep session active</span>
+          </label>
+          <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> SSL Secured
+          </span>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button 
+          type="submit" 
+          id="loginSubmitBtn" 
+          class="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 hover:opacity-95 shadow-lg shadow-pink-600/25 transition transform active:scale-98 flex items-center justify-center gap-2">
+          <i class="fas fa-arrow-right-to-bracket" id="loginBtnIcon"></i>
+          <span id="loginBtnText">Sign In to Seller Central</span>
+        </button>
+      </form>
+
+      <!-- DIVIDER -->
+      <div class="relative my-5 flex items-center justify-center">
+        <div class="border-t border-slate-800 w-full"></div>
+        <span class="bg-slate-900 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 absolute">Fast Access</span>
+      </div>
+
+      <!-- 1-CLICK DEMO LOGIN BUTTON -->
+      <button 
+        type="button" 
+        onclick="fastDemoLogin()" 
+        class="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-slate-200 bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/40 transition flex items-center justify-center gap-2 group">
+        <i class="fas fa-bolt text-amber-400 group-hover:scale-125 transition"></i>
+        <span>⚡ 1-Click Demo Login as TrendVibe Seller</span>
+      </button>
+
+      <!-- DEMO CREDENTIALS HINT -->
+      <div class="mt-5 p-3 rounded-2xl bg-slate-950/80 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+          <span>Demo Credentials:</span>
+          <span class="text-pink-400 font-mono">Store Verified</span>
+        </div>
+        <div class="font-mono text-[10px] text-slate-300">
+          Email: <span class="text-white font-bold">seller@trendvibe.in</span><br>
+          Password: <span class="text-white font-bold">trendvibe2026</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-slate-900/40 py-4 text-center text-xs text-slate-500">
+    <p>© 2026 TrendVibe Store Central • Authorized Seller Operations Only</p>
+  </footer>
+
+  <script>
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('sellerPassword');
+      const icon = document.getElementById('pwdToggleIcon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        pwd.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function fillDemoCredentials() {
+      document.getElementById('sellerEmail').value = 'seller@trendvibe.in';
+      document.getElementById('sellerPassword').value = 'trendvibe2026';
+    }
+
+    async function handleSellerLogin(e) {
+      if (e) e.preventDefault();
+      
+      const email = document.getElementById('sellerEmail').value.trim();
+      const password = document.getElementById('sellerPassword').value.trim();
+      const errBox = document.getElementById('loginError');
+      const errMsg = document.getElementById('loginErrorMsg');
+      const succBox = document.getElementById('loginSuccess');
+      const btnText = document.getElementById('loginBtnText');
+      const btnIcon = document.getElementById('loginBtnIcon');
+
+      errBox.classList.add('hidden');
+      succBox.classList.add('hidden');
+      btnText.innerText = 'Verifying Credentials...';
+      btnIcon.className = 'fas fa-spinner fa-spin';
+
+      try {
+        const res = await fetch('/api/seller/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          localStorage.setItem('seller_token', data.token);
+          localStorage.setItem('seller_user', JSON.stringify(data.seller));
+          succBox.classList.remove('hidden');
+          btnText.innerText = 'Success! Redirecting...';
+          btnIcon.className = 'fas fa-check';
+          setTimeout(() => {
+            window.location.href = '/seller.html';
+          }, 600);
+        } else {
+          errBox.classList.remove('hidden');
+          errMsg.innerText = data.error || 'Authentication failed. Please verify credentials.';
+          btnText.innerText = 'Sign In to Seller Central';
+          btnIcon.className = 'fas fa-arrow-right-to-bracket';
+        }
+      } catch (err) {
+        errBox.classList.remove('hidden');
+        errMsg.innerText = 'Network error during login. Please ensure server is running.';
+        btnText.innerText = 'Sign In to Seller Central';
+        btnIcon.className = 'fas fa-arrow-right-to-bracket';
+      }
+    }
+
+    function fastDemoLogin() {
+      fillDemoCredentials();
+      handleSellerLogin();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const existingToken = localStorage.getItem('seller_token');
+      if (existingToken && existingToken.startsWith('seller_token_')) {
+        const succBox = document.getElementById('loginSuccess');
+        if (succBox) {
+          succBox.innerHTML = '<i class="fas fa-circle-check"></i> <span>Active seller session found. Redirecting...</span>';
+          succBox.classList.remove('hidden');
+          setTimeout(() => {
+            window.location.href = '/seller.html';
+          }, 800);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
